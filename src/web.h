@@ -1,14 +1,15 @@
 #pragma once
 #include "ofMain.h"
 #include "susuwatari.h"
+#include "ofxDelaunay.h"
 
-class web{
+class web : public ofBaseApp{
 	public:
 		void setup();
 		void update();
 		void draw();
-		void calcNormals();
-    float speed;
-    ofMesh mesh;
+		//void calcNormals();
 		susuwatari susu;
+		ofxDelaunay triangulation;
+		int triangleDrawn;
 };

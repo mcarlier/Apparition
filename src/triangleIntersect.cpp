@@ -20,7 +20,7 @@ Boolean triangle_intersection::test(  ofVec3f  V1,  // Triangle vertices
   //if determinant is near zero, ray lies in plane of triangle or ray is parallel to plane of triangle
   det = e1.dot(P);
   //NOT CULLING
-  if(det > -EPSILON && det < EPSILON) return 0;
+  if(det > -EPSILON2 && det < EPSILON2) return false;
   inv_det = 1.f / det;
 
   //calculate distance from V1 to ray origin
@@ -29,7 +29,7 @@ Boolean triangle_intersection::test(  ofVec3f  V1,  // Triangle vertices
   //Calculate u parameter and test bound
   u = T.dot(P) * inv_det;
   //The intersection lies outside of the triangle
-  if(u < 0.f || u > 1.f) return 0;
+  if(u < 0.f || u > 1.f) return false;
 
   //Prepare to test v parameter
   Q= T.cross(e1);
@@ -37,11 +37,11 @@ Boolean triangle_intersection::test(  ofVec3f  V1,  // Triangle vertices
   //Calculate V parameter and test bound
   v = D.dot(Q) * inv_det;
   //The intersection lies outside of the triangle
-  if(v < 0.f || u + v  > 1.f) return 0;
+  if(v < 0.f || u + v  > 1.f) return false;
 
   t = e2.dot(Q) * inv_det;
 
-  if(t > EPSILON) { //ray intersection
+  if(t > EPSILON2) { //ray intersection
     *out = t;
     return true;
   }

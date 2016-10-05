@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#define EPSILON 0.000001
+#define EPSILON2 0.000001
 
 class triangle_intersection {
 public:
