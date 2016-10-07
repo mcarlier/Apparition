@@ -8,6 +8,8 @@ class susuwatari{
 		void setup(vector<ofPoint> points);
 		void update();
 		void draw();
+		void drawCurrentPath();
+		void drawSegments();
 		//void setacceleration();
 		void reachEnd();
 		void reachStart();
@@ -16,6 +18,7 @@ class susuwatari{
 		//void drawPath();
 		int state; //0 change goal, 1 draw first edge, 2 draw 2nd edge, 3 draw third edge
 		vector<ofPoint> currentTriangle;
+		vector<ofPoint> segments;
 		void addTriangle(vector<ofPoint> points);
 		void changeStatus(int newStatus);
 		void printTriangle();
@@ -25,8 +28,6 @@ class susuwatari{
 		ofVec3f end;
 		ofVec3f direction;
 		ofVec3f toStart;
-		//int indexEnd;
 		ofVec3f position;
-		//ofVec3f deplacement;
     ofMesh meshCross;
 };

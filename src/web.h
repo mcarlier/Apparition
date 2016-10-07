@@ -11,5 +11,7 @@ class web : public ofBaseApp{
 		//void calcNormals();
 		susuwatari susu;
 		ofxDelaunay triangulation;
+		ofMesh mesh;
+		float rotation;
 		int triangleDrawn;
 };

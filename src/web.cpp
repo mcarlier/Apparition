@@ -1,12 +1,14 @@
 #include "web.h"
 ITRIANGLE triang;
 void web::setup(){
-  ofMesh mesh;
+//  ofMesh mesh;
   mesh.load("lofi-bunny.ply");
   triangleDrawn = 0;
   //calcNormals();
+  rotation = 0;
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < mesh.getNumVertices(); i++) {
+  //for (int i = 0; i < 20; i++) {
     triangulation.addPoint(ofPoint(mesh.getVertex(i)));
   }
   // triangulation.addPoint(ofPoint(0,100));
@@ -25,12 +27,11 @@ void web::setup(){
 
 //--------------------------------------------------------------
 void web::update(){
-  //std::cout << triangulation.getNumTriangles()<< std::endl;
-
   if( susu.state == 0 && triangleDrawn < triangulation.getNumTriangles()){
-    std::cout << "Change triangle" << std::endl;
+    //std::cout << "Change triangle" << std::endl;
     susu.addTriangle(triangulation.getPointsForITriangle(triangulation.getTriangleAtIndex(triangleDrawn)));
     triangleDrawn ++;
+    std::cout << triangleDrawn<<"/"<< triangulation.getNumTriangles()<< std::endl;
   }
   susu.update();
 //   triang =;
@@ -47,28 +48,20 @@ void web::update(){
 }
 
 void web::draw(){
-  //if (ofGetKeyPressed()) {
-  //mesh.disableNormals();
-//} else {
-ofSetColor(ofColor::white);
-
-//triang.draw();
-ofNoFill();
-
-ofSetColor(ofColor::blue);
-//susu.drawNormalEnd(mesh.getNormal(susu.indexEnd));
-
-//}
-
-//ofSetColor(ofColor(150,150,150));
-//mesh.drawWireframe();
-//  mesh.drawFaces();
-ofSetColor(ofColor::blue);
-
+  ofSetColor(ofColor::white);
+  ofNoFill();
+  ofSetColor(ofColor::blue);
+  //susu.drawNormalEnd(mesh.getNormal(susu.indexEnd));
+  ofSetColor(ofColor::blue);
   triangulation.draw();
-  susu.draw();
+  //mesh.drawWireframe();
+//  ofRotate(rotation,0,1,0);
+  ofSetColor(ofColor::blue);
+  //triangulation.draw();
+  //susu.draw();
+  //ofRotate(-rotation,0,1,0);
+  rotation+=0.05;
 }
-
 
 // void web::calcNormals() {
 // 	for( int i=0; i < mesh.getVertices().size(); i++ ) mesh.addNormal(ofPoint(0,0,0).normalize());
