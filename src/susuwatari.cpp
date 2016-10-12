@@ -1,11 +1,11 @@
 #include "susuwatari.h"
 
-void susuwatari::setup(vector<ofPoint> points){
+void susuwatari::setup(ofMeshFace points){
   state = 0;
-  position = points[0];
+  position = points.getVertex(0);
   addTriangle(points);
   needToReachStart = false;
-  speed = 1;
+  speed = 10;
 }
 
 void susuwatari::update(){
@@ -21,26 +21,22 @@ void susuwatari::update(){
   }
 }
 
-void susuwatari::draw(){
-  // ofSetColor(ofColor::yellow);
-  // ofDrawTriangle(currentTriangle[0],currentTriangle[1],currentTriangle[2]);
-  // ofSetColor(ofColor::orange);
-  // meshCross.drawWireframe();
-  // ofSetColor(ofColor::red);
-  // drawCurrentPath();
-  // ofSetColor(ofColor::green);
-  // drawSegments();
-  // ofDrawSphere(start.x, start.y, start.z, 2);
-  // ofSetColor(ofColor::red);
-  // ofDrawSphere(end.x, end.y, end.z, 2);
-
-  ofSetColor(ofColor::black);
-  meshCross.drawWireframe();
-  drawCurrentPath();
-  drawSegments();
+//draw sphere around the susuwatari.
+void  susuwatari::drawSusu(){
+  ofSetColor(ofColor::white);
   ofDrawSphere(position.x, position.y, position.z, 5);
 }
 
+//Draw the web
+void susuwatari::drawWeb(){
+  ofSetColor(ofColor::black);
+  meshCross.drawWireframe();
+  drawCurrentPath();
+  //drawSegments();
+
+}
+
+//Draw the triangle that the susuwatari is drawing.
 void susuwatari::drawCurrentPath(){
     if(state==1){
       if(needToReachStart==false){
@@ -51,16 +47,18 @@ void susuwatari::drawCurrentPath(){
       }
     }
     else if (state==2){
-      ofDrawLine(currentTriangle[0],currentTriangle[1]);
+      ofDrawLine(currentTriangle.getVertex(0),currentTriangle.getVertex(1));
       ofDrawLine(start,position);
 
     }
     else if (state==3){
-      ofDrawLine(currentTriangle[0],currentTriangle[1]);
-      ofDrawLine(currentTriangle[1],currentTriangle[2]);
+      ofDrawLine(currentTriangle.getVertex(0),currentTriangle.getVertex(1));
+      ofDrawLine(currentTriangle.getVertex(1),currentTriangle.getVertex(2));
       ofDrawLine(start,position);
     }
 }
+
+//draw lines crossed by the susuwatari to go from each new triangle.
 void susuwatari::drawSegments(){
   if (!segments.empty()) {
     for (int i = 0; i < segments.size()-2; i+=2) {
@@ -72,51 +70,47 @@ void susuwatari::drawSegments(){
   }
 }
 
-void susuwatari::addTriangle(vector<ofPoint> points){
-  if(end.length()-points[0].length()!=0){
+//Add triangle to the mesh when the drawing is end
+void susuwatari::addTriangle(ofMeshFace points){
+  if(end.length()-points.getVertex(0).length()!=0){
     needToReachStart = true;
-    toStart = points[0]-position;
-    segments.push_back(points[0]);
+    toStart = points.getVertex(0)-position;
+    segments.push_back(points.getVertex(0));
     segments.push_back(position);
   }
-  if (!currentTriangle.empty()){
-    meshCross.addVertex(currentTriangle[0]);
-    meshCross.addVertex(currentTriangle[1]);
-    meshCross.addVertex(currentTriangle[2]);
-  }
+  meshCross.addVertex(currentTriangle.getVertex(0));
+  meshCross.addVertex(currentTriangle.getVertex(1));
+  meshCross.addVertex(currentTriangle.getVertex(2));
   currentTriangle = points;
   changeStatus(1);
 }
 
+//0 change goal, 1 draw first edge, 2 draw 2nd edge, 3 draw third edge
 void susuwatari::changeStatus(int newStatus){
   if (newStatus==0){
   }
   else if (newStatus==1){
-    start = currentTriangle[0];
-    end = currentTriangle[1];
+    start = currentTriangle.getVertex(0);
+    end = currentTriangle.getVertex(1);
     direction = end - start;
     direction.normalize();
   }
   else if (newStatus==2){
-    start = currentTriangle[1];
-    end = currentTriangle[2];
+    start = currentTriangle.getVertex(1);
+    end = currentTriangle.getVertex(2);
     direction = end - start;
     direction.normalize();
   }
   else if (newStatus==3){
-    start = currentTriangle[2];
-    end = currentTriangle[0];
+    start = currentTriangle.getVertex(2);
+    end = currentTriangle.getVertex(0);
     direction = end - start;
     direction.normalize();
   }
   state = newStatus;
 }
 
-// void susuwatari::setacceleration(){
-//   deplacement =end-start;
-//   deplacement.normalize();
-// }
-
+//Test if the susuwatari excedded end position
 void susuwatari::reachEnd(){
   ofVec3f PS,ES;
   PS = position-start;
@@ -127,6 +121,7 @@ void susuwatari::reachEnd(){
    }
 }
 
+// Test if the susuwatari reach her new Start
 void susuwatari::reachStart(){
   ofVec3f PS;
   PS = position-start;
@@ -135,28 +130,7 @@ void susuwatari::reachStart(){
   }
 }
 
+//Print the vertices of the triangle that the susuwatari is currently drawing.
 void susuwatari::printTriangle(){
-  std::cout << currentTriangle[0]<< currentTriangle[1]<< currentTriangle[2] << std::endl;
+  std::cout << currentTriangle.getVertex(0)<< currentTriangle.getVertex(1)<< currentTriangle.getVertex(2) << std::endl;
 }
-
-// void susuwatari::changeDirection(ofVec3f newDirection, int indexVertex){
-//   start = end;
-//   path.addVertex(start);
-//   position = end;
-//   indexEnd = indexVertex;
-//   end = newDirection;
-//   setacceleration();
-// }
-//
-// void susuwatari::drawPath(){
-//   ofSetColor(ofColor::black);
-//   for(int i = 0; i < path.getNumVertices()-1; i++) {
-//    	ofDrawLine(path.getVertex(i),path.getVertex(i+1));
-//   }
-//   ofDrawLine(start,position);
-//   //std::cout << path.hasNormals() << std::endl;
-//   // ofSetColor(ofColor::black);
-//   // for(int i = 0; i < path.getNumVertices()-1; i++) {
-//   //   ofDrawLine(path.getVertex(i),path.getVertex(i+1));
-//   // }
-// }
