@@ -1,6 +1,6 @@
 #pragma once
 #include "ofMain.h"
-#include "susuwatariGroup.h"
+#include "webSample.h"
 #include "ofxDelaunay.h"
 
 class web : public ofBaseApp{
@@ -8,13 +8,31 @@ class web : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		void changeState();
+		int state;
+		vector<webSample> webSamples;
+		int NumWebSample;
 
-		susuwatariGroup susuwataris;
+		//Vbo dealing :
+		ofVbo vboSusu;
+		vector <ofVec3f> pointsSusu;
+		vector <ofVec3f> sizesSusu;
+		ofTexture texture;
+		ofShader shaderSusu;
 
+		//ofVbo vboWeb;
+
+
+
+		//apprearance
+		void setup_appeared();
+		void update_appeared();
 		ofxDelaunay triangulation;
 		ofMesh mesh;
-		float rotation;
 		int triangleDrawn;
 		vector<ofMeshFace> triangles;
+
+
+
 
 };

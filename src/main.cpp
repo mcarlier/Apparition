@@ -4,7 +4,6 @@
 #include "ofGLProgrammableRenderer.h"
 #endif
 
-//========================================================================
 int main( ){
 // ofGLWindowSettings settings;
 // settings.setGLVersion(3,2);
