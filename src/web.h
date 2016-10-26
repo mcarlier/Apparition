@@ -12,6 +12,8 @@ class web : public ofBaseApp{
 		int state;
 		vector<webSample> webSamples;
 		int NumWebSample;
+		ofxDelaunay triangulation;
+		ofMesh mesh;
 
 		//Vbo dealing :
 		ofVbo vboSusu;
@@ -20,17 +22,18 @@ class web : public ofBaseApp{
 		ofTexture texture;
 		ofShader shaderSusu;
 
-		//ofVbo vboWeb;
+		ofShader shaderWeb;
+
 
 
 
 		//apprearance
 		void setup_appeared();
 		void update_appeared();
-		ofxDelaunay triangulation;
-		ofMesh mesh;
 		int triangleDrawn;
 		vector<ofMeshFace> triangles;
+		ofPlanePrimitive plane;
+		ofImage img;
 
 
 

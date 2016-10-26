@@ -1,8 +1,13 @@
-void main() {
+#version 150
 
-    gl_Position   = gl_ModelViewProjectionMatrix * gl_Vertex;
-	float size    = gl_Normal.x;
-    gl_PointSize  = size;
-    gl_FrontColor = gl_Color;
+uniform mat4 modelViewProjectionMatrix;
 
+in vec4 position;
+in vec2 texcoord;
+
+out vec2 coord;
+
+void main(){
+	gl_Position = modelViewProjectionMatrix * position;
+	coord = texcoord;
 }
