@@ -1,11 +1,9 @@
 #version 150
 
-
 uniform sampler2DRect tex0;
-in vec2 coord;
+in vec2 texCoordVarying;
 
 out vec4 outputColor;
-
 
 void main()
 {
@@ -21,6 +19,6 @@ void main()
 	float g = gl_FragCoord.y / windowHeight;
 	float b = 0.0;
 	float a = 1.0;
-	outputColor = vec4(r, g, b, a);
-  //outputColor = texture(tex0, coord);
+	//outputColor = vec4(r, g, b, a);
+  outputColor = texture(tex0, texCoordVarying);
 }

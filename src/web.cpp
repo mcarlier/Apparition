@@ -5,10 +5,9 @@ void web::setup(){
   mesh.load("lofi-bunny.ply");
   NumWebSample = int(ofRandom(1,6));
 
-  ofDisableArbTex();
-  //ofLoadImage(texture, "images.jpg");
+  ofLoadImage(texture, "img.jpg");
   shaderSusu.load("shaders/shader");
-  img.load("dot2.png");
+  //img.load("img.jpg");
   //shaderSusu.setUniformTexture("texture", texture.getTextureReference(), 1 );
 
   for (size_t i = 0; i < NumWebSample; i++) {
@@ -21,7 +20,7 @@ void web::setup(){
   }
 
   plane.set(800, 600, 10, 10);
-  plane.mapTexCoords(0, 0, img.getWidth(), img.getHeight());
+  plane.mapTexCoords(0, 0, texture.getWidth(), texture.getHeight());
 
   vboSusu.setVertexData(&pointsSusu[0], (int)pointsSusu.size(), GL_STATIC_DRAW);
   vboSusu.setNormalData(&sizesSusu[0], (int)pointsSusu.size(), GL_STATIC_DRAW);
@@ -58,12 +57,31 @@ void web::draw(){
   //     webSamples[i].mesh.draw();
   // }
   //texture.bind();
-  img.getTexture().bind();
+  //img.getTexture().bind();
+  texture.bind();
   shaderSusu.begin();
   vboSusu.draw(GL_POINTS, 0, (int)pointsSusu.size());
   //plane.draw();
+  for (size_t i = 0; i < webSamples.size(); i++) {
+
+    // shaderWeb.setUniform4f("uColor",essai,essai,essai,essai);
+    //
+     //triangulation.triangleMesh.draw();
+    //
+
+  //  mesh.draw();
+    //triangulation.triangleMesh.draw();
+    //webSamples[i].drawSusu();
+    webSamples[i].mesh.drawWireframe();
+    // //webSamples[i].drawSusu();
+    //   if(state == 1)
+     webSamples[i].drawCurrentPath_appeared();
+
+  }
+
   shaderSusu.end();
-  img.getTexture().unbind();
+  texture.unbind();
+  //img.getTexture().unbind();
   //triangulation.triangleMesh.draw();
   // mesh.draw();
   //vboSusu.draw(GL_POINTS, 0, (int)pointsSusu.size());
@@ -102,22 +120,6 @@ shaderWeb.begin();
 //shaderWeb.setUniform1f("time2", ofGetElapsedTimef());
 
 
-for (size_t i = 0; i < webSamples.size(); i++) {
-
-  // shaderWeb.setUniform4f("uColor",essai,essai,essai,essai);
-  //
-   //triangulation.triangleMesh.draw();
-  //
-
-//  mesh.draw();
-  //triangulation.triangleMesh.draw();
-  webSamples[i].drawSusu();
-  webSamples[i].mesh.drawWireframe();
-  // //webSamples[i].drawSusu();
-  //   if(state == 1)
-   webSamples[i].drawCurrentPath_appeared();
-
-}
 
 shaderWeb.end();
 

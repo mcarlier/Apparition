@@ -2,8 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	ofSetVerticalSync(true);
+	//ofSetVerticalSync(true);
 	web.setup();
+	scene.setup();
 	rotation = 0;
 
 
@@ -12,6 +13,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	web.update();
+	scene.update();
 }
 
 //--------------------------------------------------------------
@@ -22,11 +24,14 @@ void ofApp::draw(){
 
 	ofSetColor(255);
 	cam.begin();
-		ofRotate(rotation,0,1,0);
+	scene.draw();
+		//ofRotate(rotation,0,1,0);
 
 	web.draw();
-	ofRotate(-rotation,0,1,0);
+
+	//ofRotate(-rotation,0,1,0);
 	rotation+=0.05;
+
 	cam.end();
 
 

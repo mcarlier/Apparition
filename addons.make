@@ -1,1 +1,3 @@
 ofxDelaunay
+ofxKinectV2
+ofxGui

@@ -33,9 +33,5 @@ class web : public ofBaseApp{
 		int triangleDrawn;
 		vector<ofMeshFace> triangles;
 		ofPlanePrimitive plane;
-		ofImage img;
-
-
-
 
 };
