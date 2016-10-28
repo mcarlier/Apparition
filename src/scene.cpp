@@ -34,6 +34,7 @@ void scene::setup(){
 
     SomeoneDetected = 0;
     timer = false;
+    move = false;
 }
 
 //--------------------------------------------------------------
@@ -54,14 +55,14 @@ void scene::update(){
 
             //each second If noone is detected
             //  if((SomeoneDetected==0)&&timer){
+            ofPixels currentDepthImg = kinects[0]->getDepthPixels();
             if(timer){
-               detectPresence(kinects[0]->getDepthPixels());
-            //   timer = false;
-            //   int avg = getDepthAvg(kinects[0]->getDepthPixels());
-            //   if(avg>=avg0+10){
-            //    std::cout << "someone is detected" << std::endl;
-            //    SomeoneDetected = 1;
-            //   }
+              move = false;
+              detectPresence(currentDepthImg);
+              timer = false;
+             }
+             if (SomeoneDetected!=0){
+                 detectMotion(currentDepthImg);
              }
             texDepth.loadData( kinects[0]->getDepthPixels() );
             texRGB.loadData( kinects[0]->getRgbPixels() );
@@ -76,38 +77,57 @@ void scene::draw(){
         float dhHD = 1080/4;
 
         float shiftY = 100;// + ((10 + texDepth.getHeight()) * d);
+        ofClear ( 0, 0, 0 );
+        shader.begin();
 
-        if (SomeoneDetected == 0) {
-          ofSetColor(ofColor::white);
-        }
-        else if (SomeoneDetected == 1){
+        if(move){
           ofSetColor(ofColor::red);
         }
-        else{
-          ofSetColor(ofColor::green);
-
+        if (SomeoneDetected == 0) {
+          //ofSetColor(ofColor::white);
+          ofRotate(180);
+          ofTranslate(-400,0,0);
+          texDepthLeft0.bind();
+          plane.draw();
+          texDepthLeft0.unbind();
+          ofTranslate(400,0,0);
+          texDepthRight0.bind();
+          plane.draw();
+          texDepthRight0.unbind();
+          ofRotate(-180);
         }
-
-        //std::cout << SomeoneDetected << std::endl;
-
-
-        shader.begin();
+        else if (SomeoneDetected == 1){
+          //ofSetColor(ofColor::purple);
+          ofRotate(180);
+          ofTranslate(-400,0,0);
+          texDepthLeft0.bind();
+          plane.draw();
+          texDepthLeft0.unbind();
+          ofTranslate(400,0,0);
+          lastImage.bind();
+          plane.draw();
+          lastImage.unbind();
+          ofRotate(-180);
+        }
+       else{
+        //ofSetColor(ofColor::red);
         ofRotate(180);
         ofTranslate(-400,0,0);
-        texDepthLeft0.bind();
+        lastImage.bind();
         plane.draw();
-        texDepthLeft0.unbind();
+        lastImage.unbind();
         ofTranslate(400,0,0);
-
-        //ofTranslate(texDepthRight0.getWidth()/2,0,0);
         texDepthRight0.bind();
         plane.draw();
         texDepthRight0.unbind();
-        //ofTranslate(-texDepthRight0.getWidth()/2,0,0);
         ofRotate(-180);
+      }
+
+        //std::cout << SomeoneDetected << std::endl;
 
         if (texDepth.isAllocated())
         texDepth.draw(0,0);
+
         shader.end();
 
 
@@ -120,6 +140,7 @@ void scene::draw(){
 }
 
 void scene::detectPresence(ofImage img){
+  //std::cout << "Presence" << std::endl;
   int avgR,avgL;
   ofImage imgR;
   imgR.clone(img);
@@ -128,17 +149,18 @@ void scene::detectPresence(ofImage img){
   Boolean someoneRight = false;
   Boolean someoneLeft = false;
 
-
     avgR= getDepthAvg(imgR);
     if(avgR>=avgR0+10){
      someoneRight = true;
      SomeoneDetected = 1;
+     lastImage = imgR;
     }
 
     avgL= getDepthAvg(img);
     if(avgL>=avgR0+10){
      someoneLeft = true;
      SomeoneDetected = 2;
+     lastImage = img;
     }
 
     if((someoneLeft&&someoneRight)||(!someoneLeft&&!someoneRight)){
@@ -146,14 +168,39 @@ void scene::detectPresence(ofImage img){
     }
 
 }
+void scene::detectMotion(ofImage img){
+//  std::cout << "Motion" << std::endl;
+
+  if (SomeoneDetected==1) {
+    img.crop(img.getWidth()/2,0,img.getWidth()/2,img.getHeight());
+  }
+  else{
+    img.crop(0,0,img.getWidth()/2,img.getHeight());
+  }
+  for(int i = 0; i < img.getPixels().size(); i+=50) {
+    img.setColor(i,img.getColor(i) -lastImage.getColor(i));
+  }
+  if(getDepthAvg(img)>5){
+    move = true;
+  }
+}
+
+
+
+
+
+
+
+
 
 //Essayer e reduire le nombre de calcule ici;
 int getDepthAvg(ofPixels pix){
-  int i = 0;
+  int i =0;
   int avg = 0;
-  for(i = 0; i < pix.size(); i+=100) {
+  for( i = 0; i < pix.size(); i+=100) {
     avg += (int)pix.getColor(i).b;
   }
+  //std::cout << int(avg*100/i) << std::endl;
   return int(avg*100/i);
 }
 

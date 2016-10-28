@@ -11,6 +11,7 @@ class scene {
 		void update();
 		void updateTimer();
 		void detectPresence(ofImage img);
+		void detectMotion(ofImage img);
 		void draw();
 
         ofxPanel panel;
@@ -19,6 +20,7 @@ class scene {
 
 				ofImage  texDepthRight0;
 				ofImage  texDepthLeft0;
+				ofImage  lastImage;
 				int avgR0,avgL0;
 				ofTexture texDepth;
         ofTexture texRGB;
@@ -28,6 +30,8 @@ class scene {
 
 				ofShader shader;
 				ofPlanePrimitive plane;
+				ofImage diff;
+				Boolean move;
 };
 
 int getDepthAvg(ofPixels pix);
