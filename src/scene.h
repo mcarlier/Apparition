@@ -10,19 +10,24 @@ class scene {
 		void setup();
 		void update();
 		void updateTimer();
+		void detectPresence(ofImage img);
 		void draw();
 
         ofxPanel panel;
 
         vector < shared_ptr<ofxKinectV2> > kinects;
 
-				ofPixels  texDepth0;
-				int avg0;
+				ofImage  texDepthRight0;
+				ofImage  texDepthLeft0;
+				int avgR0,avgL0;
 				ofTexture texDepth;
         ofTexture texRGB;
-				Boolean SomeoneDetected;
+				int SomeoneDetected;//0 = no detection/ 1 = right / 2 = left;
 				Boolean timer;
 				static int testFrequency;
+
+				ofShader shader;
+				ofPlanePrimitive plane;
 };
 
 int getDepthAvg(ofPixels pix);
