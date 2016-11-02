@@ -1,4 +1,14 @@
 #include "scene.h"
+#include <stdio.h>  /* defines FILENAME_MAX */
+#ifdef WINDOWS
+    #include <direct.h>
+    #define GetCurrentDir _getcwd
+#else
+    #include <unistd.h>
+    #define GetCurrentDir getcwd
+ #endif
+
+
 
 //NOTE: if you are unable to connect to your device on OS X, try unplugging and replugging in the power, while leaving the USB connected.
 //ofxKinectV2 will only work if the NUI Sensor shows up in the Superspeed category of the System Profiler in the USB section.
@@ -30,11 +40,12 @@ void scene::setup(){
       //  panel.add(kinects[d]->params);
     }
     shader.load("shaders/shaderDetection");
-    plane.set(400, 600, 10, 10);
+
 
     SomeoneDetected = 0;
     timer = false;
     move = false;
+    saveImg = false;
 }
 
 //--------------------------------------------------------------
@@ -47,25 +58,44 @@ void scene::update(){
               texDepthLeft0.clone(texDepthRight0);
               texDepthLeft0.crop(0,0,texDepthLeft0.getWidth()/2,texDepthLeft0.getHeight());
               texDepthRight0.crop(texDepthRight0.getWidth()/2,0,texDepthRight0.getWidth()/2,texDepthRight0.getHeight());
-              plane.mapTexCoords(0, 0, texDepthRight0.getWidth(), texDepthRight0.getHeight());
+              texRGBRight0 = kinects[0]->getRgbPixels();
+              texRGBLeft0.clone(texRGBRight0);
+              texRGBLeft0.crop(0,0,texRGBLeft0.getWidth()/2,texRGBLeft0.getHeight());
+              texRGBRight0.crop(texRGBRight0.getWidth()/2,0,texRGBRight0.getWidth()/2,texRGBRight0.getHeight());
+              plane.set(texRGBRight0.getWidth()/2, texRGBRight0.getHeight(), 10, 10);
+              plane.mapTexCoords(0, 0, texRGBLeft0.getWidth(), texRGBLeft0.getHeight());
               avgR0 = getDepthAvg(texDepthRight0);
               avgL0 = getDepthAvg(texDepthLeft0);
 
             }
 
+
+
             //each second If noone is detected
             //  if((SomeoneDetected==0)&&timer){
             ofPixels currentDepthImg = kinects[0]->getDepthPixels();
+            ofPixels currentRGBImg = kinects[0]->getRgbPixels();
             if(timer){
-              move = false;
               detectPresence(currentDepthImg);
+              lastRGBImage = currentRGBImg;
               timer = false;
+              if (SomeoneDetected!=0){
+                  //detectMotionRGB(currentRGBImg);
+              }
              }
              if (SomeoneDetected!=0){
-                 detectMotion(currentDepthImg);
+                 detectMotionDepth(currentDepthImg);
+                 //detectMotionRGB(currentRGBImg);
              }
+             else{
+               chronoSave = 0;
+               move = false;
+             }
+
             texDepth.loadData( kinects[0]->getDepthPixels() );
             texRGB.loadData( kinects[0]->getRgbPixels() );
+            if(SomeoneDetected!=0)
+            saveImage(currentRGBImg);
         }
 }
 
@@ -79,64 +109,33 @@ void scene::draw(){
         float shiftY = 100;// + ((10 + texDepth.getHeight()) * d);
         ofClear ( 0, 0, 0 );
         shader.begin();
-
+        ofScale(ofVec3f(0.25));
         if(move){
           ofSetColor(ofColor::red);
         }
-        if (SomeoneDetected == 0) {
-          //ofSetColor(ofColor::white);
-          ofRotate(180);
-          ofTranslate(-400,0,0);
-          texDepthLeft0.bind();
-          plane.draw();
-          texDepthLeft0.unbind();
-          ofTranslate(400,0,0);
-          texDepthRight0.bind();
-          plane.draw();
-          texDepthRight0.unbind();
-          ofRotate(-180);
+        else if (SomeoneDetected == 0) {
+          ofSetColor(ofColor::white);
         }
         else if (SomeoneDetected == 1){
-          //ofSetColor(ofColor::purple);
-          ofRotate(180);
-          ofTranslate(-400,0,0);
-          texDepthLeft0.bind();
-          plane.draw();
-          texDepthLeft0.unbind();
-          ofTranslate(400,0,0);
-          lastImage.bind();
-          plane.draw();
-          lastImage.unbind();
-          ofRotate(-180);
+            ofSetColor(ofColor::blue);
         }
        else{
-        //ofSetColor(ofColor::red);
-        ofRotate(180);
-        ofTranslate(-400,0,0);
-        lastImage.bind();
-        plane.draw();
-        lastImage.unbind();
-        ofTranslate(400,0,0);
-        texDepthRight0.bind();
-        plane.draw();
-        texDepthRight0.unbind();
-        ofRotate(-180);
+           ofSetColor(ofColor::green);
       }
-
+        ofScale(ofVec3f(2));
         //std::cout << SomeoneDetected << std::endl;
-
-        if (texDepth.isAllocated())
-        texDepth.draw(0,0);
-
+        ofTranslate(-texRGB.getWidth()/2,-texRGB.getHeight()/2,0);
+        if(saveImg==false){
+          if (texRGB.isAllocated())
+          texRGB.draw(0,0);//texRGB.draw(0,0);
+        }
+        else{
+          testSave.draw(0,0);
+        }
+        ofScale(ofVec3f(2));
         shader.end();
-
-
-
-
         //texRGB[d].draw(210 + texDepth[d].getWidth(), shiftY, dwHD, dhHD);
-
-
-    //panel.draw();
+      //panel.draw();
 }
 
 void scene::detectPresence(ofImage img){
@@ -153,14 +152,14 @@ void scene::detectPresence(ofImage img){
     if(avgR>=avgR0+10){
      someoneRight = true;
      SomeoneDetected = 1;
-     lastImage = imgR;
+     lastDepthImage = imgR;
     }
 
     avgL= getDepthAvg(img);
     if(avgL>=avgR0+10){
      someoneLeft = true;
      SomeoneDetected = 2;
-     lastImage = img;
+     lastDepthImage = img;
     }
 
     if((someoneLeft&&someoneRight)||(!someoneLeft&&!someoneRight)){
@@ -168,9 +167,8 @@ void scene::detectPresence(ofImage img){
     }
 
 }
-void scene::detectMotion(ofImage img){
-//  std::cout << "Motion" << std::endl;
-
+//
+void scene::detectMotionDepth(ofImage img){
   if (SomeoneDetected==1) {
     img.crop(img.getWidth()/2,0,img.getWidth()/2,img.getHeight());
   }
@@ -178,29 +176,75 @@ void scene::detectMotion(ofImage img){
     img.crop(0,0,img.getWidth()/2,img.getHeight());
   }
   for(int i = 0; i < img.getPixels().size(); i+=50) {
-    img.setColor(i,img.getColor(i) -lastImage.getColor(i));
+    img.setColor(i,img.getColor(i) -lastDepthImage.getColor(i));
   }
   if(getDepthAvg(img)>5){
+    chronoSave = 0;
+    move = true;
+  }
+  else{
+    if(move == true){
+      chronoSave = int(ofGetElapsedTimef());
+    }
+    move = false;
+  }
+}
+
+//Fonction à adapter quand le projet sera dans un vrai projet.
+void scene::saveImage(ofImage img){
+    //std::cout << "crono"<<chronoSave << std::endl;
+    //std::cout << int(ofGetElapsedTimef()) - chronoSave << std::endl;
+     if((chronoSave!=0)&&(int(ofGetElapsedTimef()) - chronoSave>5) && !saveImg){
+       std::cout << "SaveImg!" << std::endl;
+       //char cCurrentPath[FILENAME_MAX];
+       //GetCurrentDir("/Users/Maelle/Desktop/Mirai/of_v0.9.3_osx_release/", sizeof(cCurrentPath));
+       string cCurrentPath;
+       if(SomeoneDetected==1){
+         cCurrentPath = "/Users/Maelle/Desktop/Mirai/of_v0.9.3_osx_release/examples/3d/wireframeDrawer/bin/data/imgRight.jpg";
+       }
+       else{
+         cCurrentPath = "/Users/Maelle/Desktop/Mirai/of_v0.9.3_osx_release/examples/3d/wireframeDrawer/bin/data/imgLeft.jpg";
+       }
+       saveImg = true;
+       ofSaveImage(img,cCurrentPath,OF_IMAGE_QUALITY_BEST);
+       if(SomeoneDetected==1){
+         testSave.load("imgRight.jpg");
+       }
+       else{
+         testSave.load("imgLeft.jpg");
+        }
+
+     }
+}
+//Not working for now
+void scene::detectMotionRGB(ofImage img){
+  if (SomeoneDetected==1) {
+    img.crop(img.getWidth()/2,0,img.getWidth()/2,img.getHeight());
+  }
+  else{
+    img.crop(0,0,img.getWidth()/2,img.getHeight());
+  }
+  int firstavg =getDepthAvg(img);
+  for(int i = 0; i < img.getPixels().size(); i+=3000) {
+    img.setColor(i,img.getColor(i) -lastRGBImage.getColor(i));
+
+  }
+
+  if(getDepthAvg(img)>100){
     move = true;
   }
 }
 
 
-
-
-
-
-
-
-
 //Essayer e reduire le nombre de calcule ici;
 int getDepthAvg(ofPixels pix){
+
   int i =0;
   int avg = 0;
   for( i = 0; i < pix.size(); i+=100) {
+
     avg += (int)pix.getColor(i).b;
   }
-  //std::cout << int(avg*100/i) << std::endl;
   return int(avg*100/i);
 }
 

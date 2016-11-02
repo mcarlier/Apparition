@@ -11,7 +11,8 @@ class scene {
 		void update();
 		void updateTimer();
 		void detectPresence(ofImage img);
-		void detectMotion(ofImage img);
+		void detectMotionDepth(ofImage img);
+		void detectMotionRGB(ofImage img);
 		void draw();
 
         ofxPanel panel;
@@ -19,8 +20,11 @@ class scene {
         vector < shared_ptr<ofxKinectV2> > kinects;
 
 				ofImage  texDepthRight0;
+				ofImage  texRGBRight0;
 				ofImage  texDepthLeft0;
-				ofImage  lastImage;
+				ofImage  texRGBLeft0;
+				ofImage  lastRGBImage;
+				ofImage  lastDepthImage;
 				int avgR0,avgL0;
 				ofTexture texDepth;
         ofTexture texRGB;
@@ -32,6 +36,12 @@ class scene {
 				ofPlanePrimitive plane;
 				ofImage diff;
 				Boolean move;
+
+				Boolean saveImg;
+				int chronoSave;
+				void saveImage(ofImage img);
+				ofImage testSave;
+
 };
 
 int getDepthAvg(ofPixels pix);
