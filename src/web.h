@@ -24,6 +24,15 @@ class web : public ofBaseApp{
 
 		ofShader shaderWeb;
 
+		ofImage RVB;
+		ofImage Depth;
+		ofImage RVB0;
+		ofImage Depth0;
+		ofMesh meshRight;
+		ofxDelaunay triangulationRight;
+		void createMesh();
+
+
 
 
 

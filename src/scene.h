@@ -39,9 +39,10 @@ class scene {
 
 				Boolean saveImg;
 				int chronoSave;
-				void saveImage(ofImage img);
+				void saveImage(ofImage img,ofImage imgdepth);
 				ofImage testSave;
 
 };
 
-int getDepthAvg(ofPixels pix);
+int getDepthAvgPresence(ofPixels pix);
+int getDepthAvgMotion(ofPixels pix);

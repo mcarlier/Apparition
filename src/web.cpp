@@ -6,7 +6,7 @@ void web::setup(){
   NumWebSample = int(ofRandom(1,6));
 
   ofLoadImage(texture, "img.jpg");
-  shaderSusu.load("shaders/shader");
+  shaderSusu.load("shaders/shaderNoise");
   //img.load("img.jpg");
   //shaderSusu.setUniformTexture("texture", texture.getTextureReference(), 1 );
 
@@ -26,6 +26,12 @@ void web::setup(){
   vboSusu.setNormalData(&sizesSusu[0], (int)pointsSusu.size(), GL_STATIC_DRAW);
   shaderWeb.load("shaders/shader");
 
+
+  RVB.load("imgRight.jpg");
+  RVB0.load("texRGBRight0.jpg");
+  Depth.load("imgDRight.jpg");
+  Depth0.load("texDepthRight0.jpg");
+  createMesh();
 }
 
 //--------------------------------------------------------------
@@ -33,9 +39,66 @@ void web::update(){
   if(state==1){
     update_appeared();
   }
-}
+  triangulation.triangleMesh.addTexCoord(ofVec2f(0,1000));
 
+}
+void web::createMesh(){
+  int colorclair = 0;
+  for (size_t i = 0; i < Depth.getPixels().size(); i+=100) {
+    if(Depth.getColor(i).r>colorclair){
+      colorclair = Depth.getColor(i).r;
+    }
+  }
+  std::cout <<colorclair<< std::endl;
+
+  for (size_t i = 0; i < Depth.getWidth(); i+=int(ofRandom(10,20))) {
+      for (size_t j = 0; j < Depth.getHeight(); j+=int(ofRandom(10,20))) {
+        if(Depth.getColor(i,j).r>200){
+          std::cout << "addvertex" << std::endl;
+          meshRight.addVertex(ofVec3f(i,j,0));
+          }
+        // else{
+        //   Depth.setColor(i, ofColor(0,0,0));
+        //
+        //   //Depth.setColor(i, ofColor(255,255,255));
+        // }
+      }
+    // std::cout << i << std::endl;
+    // std::cout << Depth.getColor(i) << std::endl;
+    // Depth.setColor(i,ofColor(0,0,0,255));//Depth0.getColor(i));
+    // std::cout << Depth.getColor(i) << std::endl;
+  }
+  for (int i = 0; i < meshRight.getNumVertices(); i++) {
+    triangulationRight.addPoint(ofPoint(meshRight.getVertex(i)));
+  }
+  triangulationRight.triangulate();
+}
 void web::draw(){
+
+  //RightSide
+  ofPushMatrix();
+  ofSetColor(ofColor::white);
+  ofTranslate(0,-RVB0.getHeight()*0.65/2,0);
+  ofScale(ofVec3f(0.65));
+  ofScale(ofVec3f(RVB0.getHeight()/Depth0.getHeight()));
+  //Depth.draw(0,0);
+  ofPopMatrix();
+
+  ofPushMatrix();
+  ofTranslate(0,RVB0.getHeight()*0.65/2,0);
+  ofScale(ofVec3f(0.65));
+  ofScale(ofVec3f(RVB0.getHeight()/Depth0.getHeight()));
+  ofRotate(180,1,0,0);
+  ofSetColor(ofColor::purple);
+  triangulationRight.triangleMesh.drawWireframe();
+  meshRight.drawFaces();
+  ofPopMatrix();
+  //LeftSide
+
+
+
+  //RVB0.draw(-RVB.getWidth()/2,-RVB.getHeight()/2);
+  ofScale(ofVec3f(2));
 
   //Light
   shaderSusu.setUniform3f("iResolution", 1024,768,400);
@@ -58,29 +121,35 @@ void web::draw(){
   // }
   //texture.bind();
   //img.getTexture().bind();
-  texture.bind();
-  shaderSusu.begin();
-  vboSusu.draw(GL_POINTS, 0, (int)pointsSusu.size());
-  //plane.draw();
-  for (size_t i = 0; i < webSamples.size(); i++) {
 
-    // shaderWeb.setUniform4f("uColor",essai,essai,essai,essai);
-    //
-     //triangulation.triangleMesh.draw();
-    //
-
-  //  mesh.draw();
-    //triangulation.triangleMesh.draw();
-    //webSamples[i].drawSusu();
-    webSamples[i].mesh.drawWireframe();
-    // //webSamples[i].drawSusu();
-    //   if(state == 1)
-     webSamples[i].drawCurrentPath_appeared();
-
-  }
-
-  shaderSusu.end();
-  texture.unbind();
+  // texture.bind();
+  // shaderSusu.begin();
+  // RVB.draw(0,0);
+  //
+  // vboSusu.draw(GL_POINTS, 0, (int)pointsSusu.size());
+  // //plane.draw();
+  // for (size_t i = 0; i < webSamples.size(); i++) {
+  //
+  //   // shaderWeb.setUniform4f("uColor",essai,essai,essai,essai);
+  //   //
+  //    //triangulation.triangleMesh.draw();
+  //   //
+  //
+  //   //mesh.draw();
+  //   //triangulation.triangleMesh.draw();
+  //   webSamples[i].drawSusu();
+  //   //webSamples[i].mesh.addTexCoord(ofVec2f(0,10000));
+  //   webSamples[i].mesh.drawWireframe();
+  //   //webSamples[i].mesh.draw();
+  //
+  //   // //webSamples[i].drawSusu();
+  //   //   if(state == 1)
+  //    webSamples[i].drawCurrentPath_appeared();
+  //
+  // }
+  //
+  // shaderSusu.end();
+  // texture.unbind();
   //img.getTexture().unbind();
   //triangulation.triangleMesh.draw();
   // mesh.draw();
@@ -114,14 +183,14 @@ void web::draw(){
 // ofColor colorMix = colorLeft.getLerped(colorRight, percentX);
 //ofSetColor(colorMix);
 
-shaderWeb.begin();
+//shaderWeb.begin();
 
 //mkshaderWeb.setGeometryInputType(GL_POINTS);
 //shaderWeb.setUniform1f("time2", ofGetElapsedTimef());
 
 
 
-shaderWeb.end();
+//shaderWeb.end();
 
   //shaderWeb.begin();
   //vboWeb.draw(GL_POINTS, 0, mesh.getUniqueFaces().size());
