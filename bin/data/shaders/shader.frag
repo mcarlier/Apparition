@@ -18,7 +18,7 @@ void main()
 	float r = gl_FragCoord.x / windowWidth;
 	float g = gl_FragCoord.y / windowHeight;
 	float b = 0.0;
-	float a = 1.0;
+	float a = 0.5;
 	//outputColor = vec4(r, g, b, a);
-  outputColor = texture(tex0, texCoordVarying);
+  outputColor = texture(tex0, texCoordVarying)*vec4(r, g, b, a);
 }

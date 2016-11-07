@@ -6,7 +6,8 @@ void ofApp::setup(){
 	web.setup();
 	scene.setup();
 	rotation = 0;
-
+	// cam.disableMouseInput();
+	// cam.enableMouseMiddleButton();
 
 }
 
