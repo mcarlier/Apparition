@@ -4,7 +4,6 @@
 void ofApp::setup(){
 	//ofSetVerticalSync(true);
 	web.setup();
-	scene.setup();
 	rotation = 0;
 	// cam.disableMouseInput();
 	// cam.enableMouseMiddleButton();
@@ -14,7 +13,6 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	web.update();
-	scene.update();
 }
 
 //--------------------------------------------------------------
@@ -25,7 +23,6 @@ void ofApp::draw(){
 
 	ofSetColor(255);
 	cam.begin();
-	scene.draw();
 		//ofRotate(rotation,0,1,0);
 
 	web.draw();

@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "web.h"
-#include "scene.h"
 
 class ofApp : public ofBaseApp{
 	public:
@@ -24,6 +23,5 @@ class ofApp : public ofBaseApp{
 
 		ofEasyCam cam;
 		web web;
-		scene scene;
 		float rotation;
 };

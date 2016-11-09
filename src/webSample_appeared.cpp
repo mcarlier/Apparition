@@ -52,8 +52,12 @@ void webSample::addTriangle_appeared(ofMeshFace points){
     segments.push_back(position);
   }
   mesh.addVertex(currentTriangle_appeared.getVertex(0));
+  mesh.addTexCoord(currentTriangle_appeared.getTexCoord(0));
   mesh.addVertex(currentTriangle_appeared.getVertex(1));
+  mesh.addTexCoord(currentTriangle_appeared.getTexCoord(1));
   mesh.addVertex(currentTriangle_appeared.getVertex(2));
+  mesh.addTexCoord(currentTriangle_appeared.getTexCoord(2));
+
   currentTriangle_appeared = points;
   changeStatus_appeared(1);
 }

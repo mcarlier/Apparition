@@ -2,10 +2,6 @@
 
 void web::setup_appeared(){
   triangleDrawn = 0;
-  for (int i = 0; i < mesh.getNumVertices(); i++) {
-    triangulation.addPoint(ofPoint(mesh.getVertex(i)));
-  }
-  triangulation.triangulate();
   triangles = triangulation.triangleMesh.getUniqueFaces();
   for (size_t i = 0; i < webSamples.size(); i++) {
     webSamples[i].setup_appeared(triangles[triangleDrawn]);
@@ -20,7 +16,5 @@ void web::update_appeared(){
       triangleDrawn ++;
     }
     webSamples[i].update_appeared();
-    pointsSusu[i]=webSamples[i].position;
   }
-   vboSusu.updateVertexData(&pointsSusu[0],(int)pointsSusu.size());
 }
