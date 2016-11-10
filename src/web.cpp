@@ -24,11 +24,25 @@ void web::setup(){
     Depth.load("imgDLeft.jpg");
   }
   createMesh();
+
+  receiver.setup( PORT );
 }
 //--------------------------------------------------------------
 void web::update(){
   if(state==1){
     update_appeared();
+  }
+
+  if(receiver.hasWaitingMessages()){
+    ofxOscMessage m;
+    receiver.getNextMessage( &m );
+    string msg_string;
+    msg_string = m.getAddress();
+    msg_string += ": ";
+    msg_string += m.getArgTypeName(0);
+    msg_string += ":";
+    msg_string += ofToString( m.getArgAsInt32(0) );
+    std::cout << msg_string << std::endl;
   }
 }
 
