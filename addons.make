@@ -1,3 +1,2 @@
 ofxDelaunay
 ofxKinectV2
-ofxOsc

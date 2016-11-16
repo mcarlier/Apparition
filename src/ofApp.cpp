@@ -3,16 +3,14 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	//ofSetVerticalSync(true);
+	kinect.setup();
 	web.setup();
-	rotation = 0;
-	// cam.disableMouseInput();
-	// cam.enableMouseMiddleButton();
-
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 	web.update();
+	kinect.update();
 }
 
 //--------------------------------------------------------------
@@ -23,24 +21,23 @@ void ofApp::draw(){
 
 	ofSetColor(255);
 	cam.begin();
-		//ofRotate(rotation,0,1,0);
-
+	kinect.draw();
 	web.draw();
-
-	//ofRotate(-rotation,0,1,0);
-	rotation+=0.05;
 
 	cam.end();
 
 
 }
 
+void ofApp::exit() {
+    kinect.threadDetection.stopThread();
+}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	if(web.state != 1){
-	web.changeState();
-}
-	//web.update();
+		web.changeState();
+	}
 }
 
 //--------------------------------------------------------------

@@ -4,7 +4,7 @@ void web::setup(){
   state = 0;
 
   NumWebSample = int(ofRandom(1,6));
-  shaderSusu.load("shaders/shaderNoise");
+  //shaderSusu.load("shaders/shaderNoise");
 
   for (size_t i = 0; i < NumWebSample; i++) {
     webSample su;
@@ -25,7 +25,6 @@ void web::setup(){
   }
   createMesh();
 
-  receiver.setup( PORT );
 }
 //--------------------------------------------------------------
 void web::update(){
@@ -33,26 +32,9 @@ void web::update(){
     update_appeared();
   }
 
-  if(receiver.hasWaitingMessages()){
-    ofxOscMessage m;
-    receiver.getNextMessage( &m );
-    string msg_string;
-    msg_string = m.getAddress();
-    msg_string += ": ";
-    msg_string += m.getArgTypeName(0);
-    msg_string += ":";
-    msg_string += ofToString( m.getArgAsInt32(0) );
-    std::cout << msg_string << std::endl;
-  }
 }
 
 void web::draw(){
-
-  ofScale(ofVec3f(0.65));
-  ofTranslate(-RVB.getWidth()/2,-RVB.getHeight()/2,0);
-  RVB.draw(0,0);
-  ofTranslate(RVB.getWidth()/2,RVB.getHeight()/2,0);
-  ofScale(ofVec3f(1/0.65));
 
   //RightSide
   if(positionMesh==1){

@@ -2,12 +2,16 @@
 
 #include "ofMain.h"
 #include "web.h"
+#include "kinect.h"
+
 
 class ofApp : public ofBaseApp{
 	public:
 		void setup();
 		void update();
 		void draw();
+		void exit();
+
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -23,5 +27,8 @@ class ofApp : public ofBaseApp{
 
 		ofEasyCam cam;
 		web web;
-		float rotation;
+
+		kinect kinect;
+
+
 };

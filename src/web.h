@@ -3,12 +3,6 @@
 #include "webSample.h"
 #include "ofxDelaunay.h"
 
-#include "ofxOsc.h"
-
-// listen on port 12345
-#define PORT 12345
-#define NUM_MSG_STRINGS 50
-
 class web : public ofBaseApp{
 	public:
 		void setup();
@@ -41,5 +35,4 @@ class web : public ofBaseApp{
 		int triangleDrawn;
 		vector<ofMeshFace> triangles;
 
-		ofxOscReceiver	receiver;
 };
