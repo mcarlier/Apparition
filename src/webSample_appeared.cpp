@@ -5,7 +5,7 @@ void webSample::setup_appeared(ofMeshFace points){
   position = points.getVertex(0);
   addTriangle_appeared(points);
   needToReachstart_appeared = false;
-  speed = 10;
+  speed = 1000;
 }
 
 void webSample::update_appeared(){

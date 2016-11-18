@@ -5,6 +5,8 @@ void ofApp::setup(){
 	//ofSetVerticalSync(true);
 	kinect.setup();
 	web.setup();
+	shader.load("shaders/noise");
+	base.load("imgLeft.jpg");
 }
 
 //--------------------------------------------------------------
@@ -17,12 +19,21 @@ void ofApp::update(){
 
 void ofApp::draw(){
 
-	ofBackgroundGradient(ofColor(200), ofColor(150));
-
-	ofSetColor(255);
+	ofBackground(0,0,0);
 	cam.begin();
+	ofPushMatrix();
+	ofScale(ofVec3f(0.65));
+	ofTranslate(-base.getWidth()/2,-base.getHeight()/2,0);
+	shader.begin();
+	shader.setUniform1f("u_time", ofGetElapsedTimef());
+	shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+	base.draw(0,0);
+	ofPopMatrix();
+
 	kinect.draw();
+
 	web.draw();
+	shader.end();
 
 	cam.end();
 

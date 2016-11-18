@@ -28,6 +28,8 @@ class ofApp : public ofBaseApp{
 		ofEasyCam cam;
 		web web;
 
+		ofImage base;
+		ofShader shader;
 		kinect kinect;
 
 
