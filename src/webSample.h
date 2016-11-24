@@ -7,7 +7,10 @@ class webSample{
 		//webSample.cpp general funcions
 		ofVec3f position;
 		float speed;
+		int size;
 		ofMesh mesh;
+		int index;
+		static int NumWebSample;
 		void setup();
 		void update();
 		void draw();

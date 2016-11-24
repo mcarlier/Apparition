@@ -1,11 +1,10 @@
 #include "webSample.h"
-
 void webSample::setup_appeared(ofMeshFace points){
   state_appeared = 0;
-  position = points.getVertex(0);
-  addTriangle_appeared(points);
-  needToReachstart_appeared = false;
-  speed = 1000;
+  //position = points.getVertex(0);
+  //addTriangle_appeared(points);
+  needToReachstart_appeared = true;
+  speed = 1;
 }
 
 void webSample::update_appeared(){

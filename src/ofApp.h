@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "web.h"
 #include "kinect.h"
+#include "sound.h"
 
 
 class ofApp : public ofBaseApp{
@@ -31,6 +32,9 @@ class ofApp : public ofBaseApp{
 		ofImage base;
 		ofShader shader;
 		kinect kinect;
+
+		sound sound;
+
 
 
 };

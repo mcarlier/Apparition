@@ -5,14 +5,20 @@ void ofApp::setup(){
 	//ofSetVerticalSync(true);
 	kinect.setup();
 	web.setup();
-	shader.load("shaders/noise");
-	base.load("imgLeft.jpg");
+	shader.load("shaders/susu");
+	base.load("img.jpg");
+
+	sound.setup();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	ofSoundUpdate();
 	web.update();
 	kinect.update();
+	sound.update();
+
 }
 
 //--------------------------------------------------------------
@@ -24,7 +30,7 @@ void ofApp::draw(){
 	ofPushMatrix();
 	ofScale(ofVec3f(0.65));
 	ofTranslate(-base.getWidth()/2,-base.getHeight()/2,0);
-	shader.begin();
+	//shader.begin();
 	shader.setUniform1f("u_time", ofGetElapsedTimef());
 	shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
 	base.draw(0,0);
@@ -33,9 +39,11 @@ void ofApp::draw(){
 	kinect.draw();
 
 	web.draw();
-	shader.end();
+
+	sound.draw();
 
 	cam.end();
+	//shader.end();
 
 
 }
@@ -46,8 +54,11 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	if(web.state != 1){
-		web.changeState();
+	if(web.state == 1){
+		web.state=0;
+	}
+	else{
+		web.state=1;
 	}
 }
 
@@ -68,6 +79,8 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+	std::cout << "x = "<< x << '\n';
+	std::cout << "y = "<<  y<< '\n';
 
 }
 

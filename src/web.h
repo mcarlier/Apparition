@@ -8,6 +8,8 @@ class web : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		void draw_rest();
+		void update_rest();
 		void changeState();
 		int state;
 		vector<webSample> webSamples;
@@ -16,7 +18,7 @@ class web : public ofBaseApp{
 
 		//Vbo dealing :
 		// ofVbo vboSusu;
-		// vector <ofVec3f> pointsSusu;
+		vector <ofVec2f> pointsSusu;
 		// vector <ofVec3f> sizesSusu;
 		ofShader shaderSusu;
 		ofShader shaderWeb;
@@ -28,11 +30,12 @@ class web : public ofBaseApp{
 		void createMesh();
 
 
-
 		//apprearance
 		void setup_appeared();
 		void update_appeared();
+		void draw_appeard();
 		int triangleDrawn;
 		vector<ofMeshFace> triangles;
 
 };
+bool sortDescending(ofMeshFace i, ofMeshFace j);

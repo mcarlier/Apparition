@@ -1,8 +1,11 @@
 #include "webSample.h"
-
+int webSample::NumWebSample = 0;
 void webSample::setup(){
+  NumWebSample++;
+  index = NumWebSample;
   position = ofVec3f(0);
-  speed = 10;
+  speed = 4;
+  size =(rand()%3)+2;
 }
 
 void webSample::update(){
@@ -11,7 +14,15 @@ void webSample::update(){
 //draw sphere around the webSample.
 void  webSample::drawSusu(){
   ofSetColor(ofColor::white);
-  ofDrawSphere(position.x, position.y, position.z, 5);
+  // float a = size*(abs(sin(position.x+size+ofGetElapsedTimef()))+0.8);
+  float a = size;//*(abs(sin(position.x+size+ofGetElapsedTimef()))+0.8);
+  // ofBoxPrimitive box;
+  // box.set(a);
+  // box.setPosition(position);
+  // box.draw();
+  ofDrawCircle(position.x,position.y,size);
+
+  // ofDrawSphere(position.x, position.y, position.z, size*(abs(sin(position.x+size+ofGetElapsedTimef()))+0.8));
 }
 
 //Draw the web
