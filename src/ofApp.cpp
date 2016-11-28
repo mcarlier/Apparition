@@ -15,7 +15,6 @@ void ofApp::setup(){
 
 	timer2.start(false);
 
-
 }
 
 //--------------------------------------------------------------
@@ -38,12 +37,15 @@ void ofApp::draw(){
 	ofBackground(0,0,0);
 	cam.begin();
 	ofPushMatrix();
-	ofScale(ofVec3f(0.65));
-	ofTranslate(-base.getWidth()/2,-base.getHeight()/2,0);
+	ofRotate(180,1,0,0);
+	ofTranslate(-base.getWidth()/2,0,0);
+	ofScale(ofVec3f(3));
+
+	//gui.draw();
 	//shader.begin();
 	shader.setUniform1f("u_time", ofGetElapsedTimef());
 	shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-	base.draw(0,0);
+	//base.draw(0,0);
 	ofPopMatrix();
 
 	kinect.draw();
@@ -58,8 +60,6 @@ void ofApp::draw(){
 
 	timerDetectionStill.draw( 15 , 15 ) ;
 	timer2.draw( ofGetWidth() /2 + 15 , 15 ) ;
-
-
 }
 
 void ofApp::exit() {
@@ -115,8 +115,10 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	std::cout << "x = "<< x << '\n';
-	std::cout << "y = "<<  y<< '\n';
+	// std::cout << "x = "<< x << '\n';
+	// std::cout << "y = "<<  y<< '\n';
+	// kinect.saveImage();
+
 
 }
 

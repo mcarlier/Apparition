@@ -19,6 +19,7 @@ void kinect::setup(){
     lastStateDetection = 0;
     stateDetection = 0;
     changeState = 0;
+    shader.load("shaders/susu");
 
 }
 
@@ -39,13 +40,22 @@ void kinect::update(){
     }
 }
 
+void kinect::saveImage(){
+  //ofSaveImage(texRGB, string path,OF_IMAGE_QUALITY_BEST);
+  texRGB.save("img.jpg");
+  ofImage d = kinect.getDepthPixels();
+  d.saveImage("imgD.jpg");
+
+}
 //--------------------------------------------------------------
 void kinect::draw(){
   if (texRGB.isAllocated()){
     ofPushMatrix();
     ofScale(ofVec3f(0.65));
     ofTranslate(-texRGB.getWidth()/2,-texRGB.getHeight()/2,0);
+    shader.begin();
     texRGB.draw(0,0);
+    shader.end();
     ofPopMatrix();
   }
 }

@@ -8,6 +8,8 @@
 
 
 
+
+
 class ofApp : public ofBaseApp{
 	public:
 		void setup();
@@ -18,7 +20,6 @@ class ofApp : public ofBaseApp{
 
 		ofxSimpleTimer timerDetectionStill ;
 		ofxSimpleTimer timer2 ;
-
 
 		void keyPressed(int key);
 		void keyReleased(int key);

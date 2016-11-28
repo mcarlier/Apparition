@@ -12,10 +12,12 @@ void web::setup(){
   shaderWeb.load("shaders/desappeare2");
   shaderSusu.load("shaders/susu");
 
-  RVB.load("imgRight.jpg");
-  Depth.load("imgDRight.jpg");
+  RVB.load("img.jpg");
+  Depth.load("imgD.jpg");
   createMesh();
   meshcomplete = false;
+
+
 }
 
 //--------------------------------------------------------------
@@ -41,7 +43,6 @@ void web::update(){
 
 void web::draw(float soundeffect){
     ofSetColor(ofColor(255,255,255,100));
-
     draw_web();
     drawSusus(soundeffect);
 }
@@ -54,12 +55,9 @@ void web::changeState(int newState){
 }
 
 
-
-
 void web::draw_web(){
-
     ofPushMatrix();
-    ofTranslate(0,RVB.getHeight()*0.75/2,0);
+    ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
     ofScale(ofVec3f(0.8));
     ofScale(ofVec3f(RVB.getHeight()/Depth.getHeight()));
     ofRotate(180,1,0,0);
@@ -69,7 +67,7 @@ void web::draw_web(){
     shaderWeb.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     RVB.bind();
     if (meshcomplete) {
-      triangulation.triangleMesh.draw();
+    triangulation.triangleMesh.draw();
     }
     else{
       for (size_t i = 0; i < webSamples.size(); i++) {
@@ -83,7 +81,7 @@ void web::draw_web(){
 
 void web::drawSusus(float soundeffect){
   ofPushMatrix();
-  ofTranslate(0,RVB.getHeight()*0.75/2,0);
+  ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
   ofScale(ofVec3f(0.8));
   ofScale(ofVec3f(RVB.getHeight()/Depth.getHeight()));
   ofRotate(180,1,0,0);
@@ -105,22 +103,24 @@ void web::createMesh(){
 
   for (size_t j = 0; j < Depth.getHeight()-45; j+=10){
     for (size_t i = 0; i < Depth.getWidth(); i+=10){
-        if(Depth.getColor(i,j).r>200){
+      if(Depth.getColor(i,j).r>200){
           int a,b;
           if(i<=Depth.getWidth()/2){a = - ofRandom(0,10);}
           else{a =  ofRandom(0,5);}
           if(j<=Depth.getHeight()/2){b = -ofRandom(0,10);}
           else{b = -ofRandom(0,5);}
           triangulation.addPoint(ofPoint(i+a,j+b,0));
-          textcoord.push_back(ofPoint(959+(i+a)*(RVB.getWidth()*0.42/Depth.getWidth()), -82 + (b+j) * (RVB.getHeight()*1.23 / Depth.getHeight())));
-
-          }
+          textcoord.push_back(ofPoint(215.5+(i+a)*(RVB.getWidth()*0.842/Depth.getWidth()), -82 + (b+j) * (RVB.getHeight()*1.23 / Depth.getHeight())));
+        }
       }
   }
+
   triangulation.triangulate();
   for (size_t i = 0; i < textcoord.size(); i++) {
     triangulation.triangleMesh.addTexCoord(textcoord[i]);
   }
+
   triangles = triangulation.triangleMesh.getUniqueFaces();
   ofSort(triangles,sortDescending); //order the triangles for the drawing
+
 }

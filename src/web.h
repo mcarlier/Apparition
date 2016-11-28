@@ -2,6 +2,7 @@
 #include "ofMain.h"
 #include "webSample.h"
 #include "ofxDelaunay.h"
+#include "ofxGui.h"
 
 class web {
 	public:
@@ -10,7 +11,7 @@ class web {
 		void draw(float soundeffect);
 		void drawSusus(float soundeffect);
 		void draw_web();
-		void changeState(int newState); // 0 = rest,1 = detected 2 = drawing; 
+		void changeState(int newState); // 0 = rest,1 = detected 2 = drawing;
 		int state;
 		vector<webSample> webSamples;
 		int NumWebSample;
@@ -27,6 +28,7 @@ class web {
 		ofImage Depth;
 		void createMesh();
 		Boolean meshcomplete;
+
 
 		int triangleDrawn;
 		vector<ofMeshFace> triangles;

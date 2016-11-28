@@ -62,11 +62,11 @@ void webSample::setup_appeared(){
 }
 void webSample::update_rest(){
   if(!needToReachstart){
-    position.x=ofMap( ofNoise( (ofGetElapsedTimef() +(index)) ), 0, 5, 0, -700)+100;
+    position.x=ofMap( ofNoise( (ofGetElapsedTimef() +(index)) ), 0, 5, 0, -700)+305;
     position.y=ofMap( ofNoise( (1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+50;
   }
   else{
-    start.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 5, 0, -700)+100;
+    start.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 5, 0, -700)+305;
     start.y=ofMap(ofNoise( (1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+50;
     reachStart();
   }
@@ -75,11 +75,11 @@ void webSample::update_rest(){
 //detected
 void webSample::update_detected(){
   if(!needToReachstart){
-      position.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 1, 0, -700)+350;
+      position.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 1, 0, -700)+570;
       position.y=ofMap(ofNoise((1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+50;
   }
   else{
-    start.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 1, 0, -700)+350;
+    start.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 1, 0, -700)+570;
     start.y=ofMap(ofNoise((1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+50;
     reachStart();
   }

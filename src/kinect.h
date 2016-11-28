@@ -21,4 +21,5 @@ class kinect {
 		int changeState;
 		void updateState();
 		void saveImage();
+		ofShader shader;
 };
