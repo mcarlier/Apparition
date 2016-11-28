@@ -1,7 +1,7 @@
 #include "sound.h"
 
 void sound::setup(){
-  	sound.load("sound.mp3");
+  	sound.load("husavikharbouredit.wav");
   	sound.setLoop(true);
   	sound.play();
   	fftSmoothed = new float[8192];
@@ -26,13 +26,12 @@ void sound::update(){
 //--------------------------------------------------------------
 void sound::draw(){
   float width = (float)(20*128) / nBandsToGet;
-  ofPushMatrix();
-	//shader.begin();
+  float avg0 = 0;
   for (int i = 0;i < nBandsToGet; i++){
+    avg0+=fftSmoothed[i];
     ofDrawRectangle(-620+i*width,350,width,-(fftSmoothed[i] * 200));
     ofDrawRectangle(-620+i*width,-350,width,(fftSmoothed[i] * 200));
 
   }
-  ofPopMatrix();
-
+  avg=avg0/nBandsToGet;
 }

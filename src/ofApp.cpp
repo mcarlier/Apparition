@@ -38,7 +38,7 @@ void ofApp::draw(){
 
 	kinect.draw();
 
-	web.draw();
+	web.draw(sound.avg);
 
 	sound.draw();
 
@@ -54,11 +54,14 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	if(web.state == 1){
-		web.state=0;
+	if(web.state == 0){
+		web.changeState(1);
+	}
+	else if(web.state == 1){
+		web.changeState(2);
 	}
 	else{
-		web.state=1;
+		web.changeState(0);
 	}
 }
 

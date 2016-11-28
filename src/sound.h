@@ -10,8 +10,9 @@ class sound {
 		void setup();
 		void update();
 		void draw();
-    
+
     ofSoundPlayer  sound;
     float 				* fftSmoothed;
     int nBandsToGet;
+		float avg;
 };

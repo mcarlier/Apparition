@@ -3,14 +3,14 @@
 #include "webSample.h"
 #include "ofxDelaunay.h"
 
-class web : public ofBaseApp{
+class web {
 	public:
 		void setup();
 		void update();
-		void draw();
-		void draw_rest();
-		void update_rest();
-		void changeState();
+		void draw(float soundeffect);
+		void drawSusus(float soundeffect);
+		void draw_web();
+		void changeState(int newState);
 		int state;
 		vector<webSample> webSamples;
 		int NumWebSample;
@@ -23,17 +23,11 @@ class web : public ofBaseApp{
 		ofShader shaderSusu;
 		ofShader shaderWeb;
 
-
-		int positionMesh; //1 = right / 2 = left;
 		ofImage RVB;
 		ofImage Depth;
 		void createMesh();
+		Boolean meshcomplete;
 
-
-		//apprearance
-		void setup_appeared();
-		void update_appeared();
-		void draw_appeard();
 		int triangleDrawn;
 		vector<ofMeshFace> triangles;
 
