@@ -16,6 +16,9 @@ void kinect::setup(){
       threadDetection.setup(kinect.getDepthPixels());
       threadDetection.startThread();
     }
+    lastStateDetection = 0;
+    stateDetection = 0;
+    changeState = 0;
 
 }
 
@@ -32,6 +35,7 @@ void kinect::update(){
               threadDetection.unlock();
           }
       }
+      updateState();
     }
 }
 
@@ -44,4 +48,14 @@ void kinect::draw(){
     texRGB.draw(0,0);
     ofPopMatrix();
   }
+}
+
+void kinect::updateState(){
+  if (lastStateDetection!=stateDetection) {
+    changeState = stateDetection;
+  }
+  else{
+    changeState = -2;
+  }
+  lastStateDetection = stateDetection;
 }

@@ -13,11 +13,11 @@ public:
 
     ofPixels  currentDepthImage;
     ofPixels  lastDepthImage;
-    int avgR0,avgL0;
+    int avg0;
     int SomeoneDetected;//0 = no detection/ 1 = right / 2 = left;
     Boolean move;
 
-    int MotionDetectionPrecision = 300;
+    int MotionDetectionPrecision = 450;
     int PresenceDetectionPrecision = 200;
 
     void draw(){};

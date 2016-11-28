@@ -10,6 +10,12 @@ void ofApp::setup(){
 
 	sound.setup();
 
+	timerDetectionStill.setup(2000);
+	timer2.setup(750);
+
+	timer2.start(false);
+
+
 }
 
 //--------------------------------------------------------------
@@ -18,6 +24,10 @@ void ofApp::update(){
 	web.update();
 	kinect.update();
 	sound.update();
+	timerDetectionStill.update( ) ;
+	timer2.update( ) ;
+	stateManager();
+
 
 }
 
@@ -46,6 +56,10 @@ void ofApp::draw(){
 	//shader.end();
 
 
+	timerDetectionStill.draw( 15 , 15 ) ;
+	timer2.draw( ofGetWidth() /2 + 15 , 15 ) ;
+
+
 }
 
 void ofApp::exit() {
@@ -65,6 +79,25 @@ void ofApp::keyPressed(int key){
 	}
 }
 
+void ofApp::stateManager(){
+	if (kinect.changeState==1) {//someoneDetected
+		web.changeState(1);
+		timerDetectionStill.start(false);
+	}
+	else if(kinect.changeState==-1) {//someoneMoving
+		web.changeState(1);
+		timerDetectionStill.reset();
+	}
+	else if(kinect.changeState==0){
+		web.changeState(0);
+		timerDetectionStill.reset();
+	}
+	if (timerDetectionStill.bIsRunning) {
+		if(timerDetectionStill.getNormalizedProgress()-0.97>=0){
+			web.changeState(2);
+		}
+	}
+}
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 

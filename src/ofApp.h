@@ -4,6 +4,8 @@
 #include "web.h"
 #include "kinect.h"
 #include "sound.h"
+#include "ofxSimpleTimer.h"
+
 
 
 class ofApp : public ofBaseApp{
@@ -12,6 +14,10 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 		void exit();
+		void stateManager();
+
+		ofxSimpleTimer timerDetectionStill ;
+		ofxSimpleTimer timer2 ;
 
 
 		void keyPressed(int key);
@@ -32,7 +38,6 @@ class ofApp : public ofBaseApp{
 		ofImage base;
 		ofShader shader;
 		kinect kinect;
-
 		sound sound;
 
 

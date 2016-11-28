@@ -17,4 +17,8 @@ class kinect {
     ofImage texRGB;
     threadDetection threadDetection;
 		int stateDetection;
+		int lastStateDetection;
+		int changeState;
+		void updateState();
+		void saveImage();
 };
