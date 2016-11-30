@@ -40,6 +40,8 @@ class ofApp : public ofBaseApp{
 		ofShader shader;
 		kinect kinect;
 		sound sound;
+		
+		Boolean imageSaved;
 
 
 

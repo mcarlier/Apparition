@@ -48,12 +48,12 @@ void webSample::changeState(int newState){
 }
 
 void webSample::setup_rest(){
-    mesh.clear();
+    //mesh.clear();
     needToReachstart = true;
 }
 
 void webSample::setup_detected(){
-  mesh.clear();
+  //mesh.clear();
   needToReachstart = true;
 }
 void webSample::setup_appeared(){
@@ -63,11 +63,11 @@ void webSample::setup_appeared(){
 void webSample::update_rest(){
   if(!needToReachstart){
     position.x=ofMap( ofNoise( (ofGetElapsedTimef() +(index)) ), 0, 5, 0, -700)+305;
-    position.y=ofMap( ofNoise( (1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+50;
+    position.y=ofMap( ofNoise( (1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+20;
   }
   else{
     start.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 5, 0, -700)+305;
-    start.y=ofMap(ofNoise( (1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+50;
+    start.y=ofMap(ofNoise( (1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+20;
     reachStart();
   }
 }
@@ -76,11 +76,11 @@ void webSample::update_rest(){
 void webSample::update_detected(){
   if(!needToReachstart){
       position.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 1, 0, -700)+570;
-      position.y=ofMap(ofNoise((1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+50;
+      position.y=ofMap(ofNoise((1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+20;
   }
   else{
     start.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 1, 0, -700)+570;
-    start.y=ofMap(ofNoise((1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+50;
+    start.y=ofMap(ofNoise((1000.0+ ofGetElapsedTimef())+index), 0, 1, 0, 157)+20;
     reachStart();
   }
 }

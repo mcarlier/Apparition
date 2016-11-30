@@ -43,9 +43,6 @@ void kinect::update(){
 void kinect::saveImage(){
   //ofSaveImage(texRGB, string path,OF_IMAGE_QUALITY_BEST);
   texRGB.save("img.jpg");
-  ofImage d = kinect.getDepthPixels();
-  d.saveImage("imgD.jpg");
-
 }
 //--------------------------------------------------------------
 void kinect::draw(){

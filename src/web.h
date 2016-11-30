@@ -25,9 +25,9 @@ class web {
 		ofShader shaderWeb;
 
 		ofImage RVB;
-		ofImage Depth;
 		void createMesh();
 		Boolean meshcomplete;
+
 
 
 		int triangleDrawn;

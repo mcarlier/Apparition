@@ -2,7 +2,7 @@
 int essai = 0;
 void web::setup(){
 
-  NumWebSample = 6;
+  NumWebSample = 8;
   for (size_t i = 0; i < NumWebSample; i++) {
     webSample su;
     su.setup();
@@ -13,7 +13,6 @@ void web::setup(){
   shaderSusu.load("shaders/susu");
 
   RVB.load("img.jpg");
-  Depth.load("imgD.jpg");
   createMesh();
   meshcomplete = false;
 
@@ -59,7 +58,7 @@ void web::draw_web(){
     ofPushMatrix();
     ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
     ofScale(ofVec3f(0.8));
-    ofScale(ofVec3f(RVB.getHeight()/Depth.getHeight()));
+    ofScale(ofVec3f(RVB.getHeight()/424));
     ofRotate(180,1,0,0);
     ofSetColor(ofColor::white);
     shaderWeb.begin();
@@ -67,7 +66,7 @@ void web::draw_web(){
     shaderWeb.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     RVB.bind();
     if (meshcomplete) {
-    triangulation.triangleMesh.draw();
+      triangulation.triangleMesh.drawWireframe();
     }
     else{
       for (size_t i = 0; i < webSamples.size(); i++) {
@@ -83,7 +82,7 @@ void web::drawSusus(float soundeffect){
   ofPushMatrix();
   ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
   ofScale(ofVec3f(0.8));
-  ofScale(ofVec3f(RVB.getHeight()/Depth.getHeight()));
+  ofScale(ofVec3f(RVB.getHeight()/424));
   ofRotate(180,1,0,0);
   for (size_t i = 0; i < webSamples.size(); i++) {
      webSamples[i].drawSusu(soundeffect);
@@ -100,18 +99,17 @@ bool sortDescending(ofMeshFace i, ofMeshFace j)
 //UPDATE : une seule boucle
 void web::createMesh(){
   vector<ofPoint> textcoord;
-
-  for (size_t j = 0; j < Depth.getHeight()-45; j+=10){
-    for (size_t i = 0; i < Depth.getWidth(); i+=10){
-      if(Depth.getColor(i,j).r>200){
+  for (size_t j = 50; j < 424-50; j+=20){
+    for (size_t i = 150; i < 524-150; i+=20){
           int a,b;
-          if(i<=Depth.getWidth()/2){a = - ofRandom(0,10);}
+          a=0;
+          b=0;
+           if(i<=524/2){a = -ofRandom(0,5);}
           else{a =  ofRandom(0,5);}
-          if(j<=Depth.getHeight()/2){b = -ofRandom(0,10);}
-          else{b = -ofRandom(0,5);}
+           if(j<=424/2){b = -ofRandom(0,5);}
+           else{b = ofRandom(0,5);}
           triangulation.addPoint(ofPoint(i+a,j+b,0));
-          textcoord.push_back(ofPoint(215.5+(i+a)*(RVB.getWidth()*0.842/Depth.getWidth()), -82 + (b+j) * (RVB.getHeight()*1.23 / Depth.getHeight())));
-        }
+          textcoord.push_back(ofPoint(215.5+(i+a)*(RVB.getWidth()*0.842/524), -82 + (b+j) * (RVB.getHeight()*1.23 / 424)));
       }
   }
 
