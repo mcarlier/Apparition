@@ -16,6 +16,8 @@ void kinect::setup(){
       threadDetection.setup(kinect.getDepthPixels());
       threadDetection.startThread();
     }
+    base = kinect.getRgbPixels();
+    base.save("emptyRoom.jpg");//Update : No need
     lastStateDetection = 0;
     stateDetection = 0;
     changeState = 0;

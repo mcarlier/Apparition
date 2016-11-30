@@ -8,6 +8,7 @@ void webSample::setup(){
   size =(rand()%3)+2;
   meshcomplete = false;
   susuImg.load("dot.png");
+  end = false;
 
 }
 
@@ -48,13 +49,11 @@ void webSample::changeState(int newState){
 }
 
 void webSample::setup_rest(){
-    //mesh.clear();
-    needToReachstart = true;
+      needToReachstart = true;
 }
 
 void webSample::setup_detected(){
-  //mesh.clear();
-  needToReachstart = true;
+    needToReachstart = true;
 }
 void webSample::setup_appeared(){
   state_appeared = 0;
@@ -97,6 +96,11 @@ void webSample::update_appeared(){
     reachStart_appeared();
   }
 }
+void webSample::clear(){
+  mesh.clear();
+  ofMeshFace t;
+  currentTriangle_appeared = t;
+}
 
 
 //Add triangle to the mesh when the drawing is end_appeared
@@ -105,12 +109,23 @@ void webSample::addTriangle_appeared(ofMeshFace points){
     needToReachstart = true;
     tostart_appeared = points.getVertex(0)-position;
   }
-  mesh.addVertex(currentTriangle_appeared.getVertex(0));
-  mesh.addTexCoord(currentTriangle_appeared.getTexCoord(0));
-  mesh.addVertex(currentTriangle_appeared.getVertex(1));
-  mesh.addTexCoord(currentTriangle_appeared.getTexCoord(1));
-  mesh.addVertex(currentTriangle_appeared.getVertex(2));
-  mesh.addTexCoord(currentTriangle_appeared.getTexCoord(2));
+  if(!end){
+    mesh.addVertex(currentTriangle_appeared.getVertex(0));
+    mesh.addTexCoord(currentTriangle_appeared.getTexCoord(0));
+    mesh.addVertex(currentTriangle_appeared.getVertex(1));
+    mesh.addTexCoord(currentTriangle_appeared.getTexCoord(1));
+    mesh.addVertex(currentTriangle_appeared.getVertex(2));
+    mesh.addTexCoord(currentTriangle_appeared.getTexCoord(2));
+  }
+  else{
+    meshEnd.addVertex(currentTriangle_appeared.getVertex(0));
+    meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(0));
+    meshEnd.addVertex(currentTriangle_appeared.getVertex(1));
+    meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(1));
+    meshEnd.addVertex(currentTriangle_appeared.getVertex(2));
+    meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(2));
+  }
+
 
   currentTriangle_appeared = points;
   changeStatus_appeared(1);

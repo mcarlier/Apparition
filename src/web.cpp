@@ -2,7 +2,7 @@
 int essai = 0;
 void web::setup(){
 
-  NumWebSample = 8;
+  NumWebSample = 6;
   for (size_t i = 0; i < NumWebSample; i++) {
     webSample su;
     su.setup();
@@ -11,48 +11,132 @@ void web::setup(){
   changeState(0);
   shaderWeb.load("shaders/desappeare2");
   shaderSusu.load("shaders/susu");
+  shaderEnd.load("shaders/end");
+
+  meshDesappear = false;
+  Desappeare.load("shaders/desappeare");
 
   RVB.load("img.jpg");
   createMesh();
   meshcomplete = false;
+
+  timerMeshDesappeare.setup(500);
+  end = false;
+
 
 
 }
 
 //--------------------------------------------------------------
 void web::update(){
-  meshcomplete = true;
-  for (size_t i = 0; i < webSamples.size(); i++) {
-    if (webSamples[i].state==2) {
-      if( webSamples[i].state_appeared == 0 && triangleDrawn < triangulation.getNumTriangles()){
-        webSamples[i].addTriangle_appeared(triangles[triangleDrawn]);
-        triangleDrawn ++;
+
+  if(end==true){
+    updateEnd();
+  }
+  else{
+    meshcomplete = true;
+    for (size_t i = 0; i < webSamples.size(); i++) {
+      if (webSamples[i].state==2) {
+        if( webSamples[i].state_appeared == 0 && triangleDrawn < triangulation.getNumTriangles()){
+          webSamples[i].addTriangle_appeared(triangles[triangleDrawn]);
+          triangleDrawn ++;
+        }
+        else if ( webSamples[i].state_appeared == 0 && triangleDrawn >= triangulation.getNumTriangles()){
+          webSamples[i].changeState(0);
+          webSamples[i].meshcomplete=true;
+        }
       }
-      else if ( webSamples[i].state_appeared == 0 && triangleDrawn >= triangulation.getNumTriangles()){
-        webSamples[i].changeState(0);
-        webSamples[i].meshcomplete=true;
+      webSamples[i].update();
+      if (webSamples[i].meshcomplete==false) {
+        meshcomplete=false;
       }
-    }
-    webSamples[i].update();
-    if (webSamples[i].meshcomplete==false) {
-      meshcomplete=false;
     }
   }
+  if (meshDesappear == true) {
+    makeMeshDesappeare();
+  }
 }
+void web::updateEnd(){
+  int count=0;
+  for (size_t i = 0; i < webSamples.size(); i++) {
+      if( webSamples[i].state_appeared == 0 &&triangleDrawn>0){
+        webSamples[i].addTriangle_appeared(triangles[triangleDrawn]);
+        triangleDrawn--;
+      }
+      else if ( webSamples[i].state_appeared == 0 && triangleDrawn <= 0){
+        webSamples[i].changeState(0);
+        webSamples[i].end = false;
+      }
 
+      webSamples[i].update();
+      if (webSamples[i].end==false) {
+        count++;
+        end=true;
+        webSamples[i].changeState(0);
+      }
+
+    }
+    if (count==webSamples.size()){
+      std::cout << "please go" << '\n';
+      end = false;
+      changeState(0);
+    }
+}
 void web::draw(float soundeffect){
     ofSetColor(ofColor(255,255,255,100));
     draw_web();
     drawSusus(soundeffect);
 }
 void web::changeState(int newState){
-  state = newState;
+  std::cout << newState << '\n';
   triangleDrawn = 0;
+  int numComplete = 0;
   for (size_t i = 0; i < webSamples.size(); i++) {
     webSamples[i].changeState(newState);
+    if (webSamples[i].meshcomplete==true) {
+      numComplete++;
+    }
   }
+  if(state==2){
+    std::cout << "disappear meash" << '\n';
+      meshDesappear = true;
+      ofShader temp;
+      temp = shaderWeb;
+      shaderWeb = Desappeare;
+      Desappeare = temp;
+      timerMeshDesappeare.start(false);
+  }
+  if(numComplete==webSamples.size()){
+    setupEnd();
+  }
+  state = newState;
+
 }
 
+void web::setupEnd(){
+  std::cout << "endSetup" << '\n';
+  end = true;
+  for (size_t i = 0; i < webSamples.size(); i++) {
+    webSamples[i].end=true;
+  }
+
+}
+
+
+void web::makeMeshDesappeare(){
+   timerMeshDesappeare.update();
+   if(!timerMeshDesappeare.bIsRunning){
+     meshDesappear = false;
+     for (size_t i = 0; i < webSamples.size(); i++) {
+       webSamples[i].clear();
+     }
+     ofShader temp;
+     temp = shaderWeb;
+     shaderWeb = Desappeare;
+     Desappeare = temp;
+   }
+
+ }
 
 void web::draw_web(){
     ofPushMatrix();
@@ -66,7 +150,7 @@ void web::draw_web(){
     shaderWeb.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     RVB.bind();
     if (meshcomplete) {
-      triangulation.triangleMesh.drawWireframe();
+      triangulation.triangleMesh.draw();
     }
     else{
       for (size_t i = 0; i < webSamples.size(); i++) {
@@ -75,6 +159,18 @@ void web::draw_web(){
     }
     RVB.unbind();
     shaderWeb.end();
+    if (end) {
+      shaderEnd.begin();
+      shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
+      shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+      base.bind();
+      for (size_t i = 0; i < webSamples.size(); i++) {
+        webSamples[i].meshEnd.draw();
+      }
+      base.unbind();
+      shaderEnd.end();
+
+    }
     ofPopMatrix();
 }
 

@@ -15,10 +15,15 @@ class webSample{
 		void update();
 		void draw();
 		void changeState(int newState);
+		void clear();
 		int state;
 
+		ofMesh meshEnd;
+		Boolean end;
+
+
 		ofImage susuImg;
-		
+
 
 		void drawSusu(float sound);
 		void drawWeb();

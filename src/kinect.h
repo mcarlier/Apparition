@@ -15,6 +15,7 @@ class kinect {
 		Boolean initialisationSucces;
 		ofxKinectV2 kinect;
     ofImage texRGB;
+		ofImage base;
     threadDetection threadDetection;
 		int stateDetection;
 		int lastStateDetection;

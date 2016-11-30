@@ -3,6 +3,8 @@
 #include "webSample.h"
 #include "ofxDelaunay.h"
 #include "ofxGui.h"
+#include "ofxSimpleTimer.h"
+
 
 class web {
 	public:
@@ -27,6 +29,18 @@ class web {
 		ofImage RVB;
 		void createMesh();
 		Boolean meshcomplete;
+
+		Boolean meshDesappear;
+		ofShader Desappeare;
+		void makeMeshDesappeare();
+		ofxSimpleTimer timerMeshDesappeare ;
+
+		Boolean end;
+		void updateEnd();
+		void setupEnd();
+		ofShader shaderEnd;
+		ofImage base;
+
 
 
 
