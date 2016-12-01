@@ -10,6 +10,7 @@
 
 
 
+
 class ofApp : public ofBaseApp{
 	public:
 		void setup();
@@ -46,7 +47,6 @@ class ofApp : public ofBaseApp{
 		Boolean restart;
 
 		void startAnew();
-
 
 
 };

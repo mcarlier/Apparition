@@ -12,6 +12,7 @@ void ofApp::setup(){
 	imageSaved = false;
 	restart = false;
 
+
 }
 
 //--------------------------------------------------------------
@@ -50,7 +51,6 @@ void ofApp::draw(){
 	ofPushMatrix();
 	ofScale(ofVec3f(0.65));
 	ofTranslate(-base.getWidth()/2,-base.getHeight()/2,0);
-	//gui.draw();
 	//shader.begin();
 	//shader.setUniform1f("u_time", ofGetElapsedTimef());
 	//shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
@@ -69,6 +69,7 @@ void ofApp::draw(){
 	//shader.end();
 	timerDetectionStill.draw( 15 , 15 ) ;
 	timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
+
 }
 
 void ofApp::exit() {
@@ -152,8 +153,8 @@ void ofApp::mouseDragged(int x, int y, int button){
 void ofApp::mousePressed(int x, int y, int button){
 	// std::cout << "x = "<< x << '\n';
 	// std::cout << "y = "<<  y<< '\n';
-	// std::cout << "saveImage " << '\n';
-	 //kinect.saveImage();
+	 std::cout << "saveImage " << '\n';
+	// kinect.saveImage();
 	 web.setupEnd();
 
 

@@ -30,7 +30,6 @@ void web::setup(){
 
 //--------------------------------------------------------------
 void web::update(){
-
   if(end==true){
     updateEnd();
   }
@@ -211,18 +210,23 @@ bool sortDescending(ofMeshFace i, ofMeshFace j)
 
 //UPDATE : une seule boucle
 void web::createMesh(){
+  ofxDelaunay trtr;
+  vector<ofMeshFace> teee;
   vector<ofPoint> textcoord;
   for (size_t j = 50; j < 424-50; j+=20){
     for (size_t i = 150; i < 524-150; i+=20){
           int a,b;
           a=0;
           b=0;
+
            if(i<=524/2){a = -ofRandom(0,5);}
           else{a =  ofRandom(0,5);}
-           if(j<=424/2){b = -ofRandom(0,5);}
-           else{b = ofRandom(0,5);}
+
+           if(j<=(424-50)/2){b = -ofRandom(0,5);}
+           else if (j<334){b = ofRandom(0,5);}
+
           triangulation.addPoint(ofPoint(i+a,j+b,0));
-          textcoord.push_back(ofPoint(215.5+(i+a)*(RVB.getWidth()*0.842/524), -82 + (b+j) * (RVB.getHeight()*1.23 / 424)));
+          textcoord.push_back(ofPoint(221.8+(i+a)*(RVB.getWidth()*0.855/524), -84.15 + (b+j) * (RVB.getHeight()*1.2325 / 424)));
       }
   }
 
