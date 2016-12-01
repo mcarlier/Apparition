@@ -57,11 +57,14 @@ void web::update(){
 void web::updateEnd(){
   int count=0;
   for (size_t i = 0; i < webSamples.size(); i++) {
-      if( webSamples[i].state_appeared == 0 &&triangleDrawn>0){
+      if( webSamples[i].state_appeared == 0 &&triangleDrawn>=0){
         webSamples[i].addTriangle_appeared(triangles[triangleDrawn]);
         triangleDrawn--;
       }
-      else if ( webSamples[i].state_appeared == 0 && triangleDrawn <= 0){
+      else if ( webSamples[i].state_appeared == 0 && triangleDrawn < 0){
+        ofMeshFace t;
+        webSamples[i].addTriangle_appeared(t);
+        webSamples[i].speed = 6;
         webSamples[i].changeState(0);
         webSamples[i].end = false;
       }

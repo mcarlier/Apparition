@@ -96,36 +96,37 @@ void ofApp::keyPressed(int key){
 }
 
 void ofApp::stateManager(){
-	if(!web.waitPeopleToGo){
-		if (kinect.changeState==1) {//someoneDetected
-			web.changeState(1);
-			timerDetectionStill.start(false);
+	if(!web.end){
+		if(!web.waitPeopleToGo){
+			if (kinect.changeState==1) {//someoneDetected
+				web.changeState(1);
+				timerDetectionStill.start(false);
+			}
+			else if(kinect.changeState==-1) {//someoneMoving
+				web.changeState(1);
+				timerDetectionStill.reset();
+			}
+			else if(kinect.changeState==0){
+				web.changeState(0);
+				timerDetectionStill.reset();
+			}
+			if ((timerDetectionStill.bIsRunning)&&(web.state!=2)) {
+				if(timerDetectionStill.getNormalizedProgress()-0.95>=0){
+					web.changeState(2);
+				}
+			}
 		}
-		else if(kinect.changeState==-1) {//someoneMoving
-			web.changeState(1);
-			timerDetectionStill.reset();
-		}
-		else if(kinect.changeState==0){
-			web.changeState(0);
-			timerDetectionStill.reset();
-		}
-		if ((timerDetectionStill.bIsRunning)&&(web.state!=2)) {
-			if(timerDetectionStill.getNormalizedProgress()-0.95>=0){
-				web.changeState(2);
+		else{
+			if(kinect.changeState==0){
+				timerPeopleOut.start(false);
+				restart=true;
+			}
+			else if((kinect.changeState==1)||(kinect.changeState==-1)){
+				timerPeopleOut.reset();
+				restart=false;
 			}
 		}
 	}
-	else{
-		if(kinect.changeState==0){
-			timerPeopleOut.start(false);
-			restart=true;
-		}
-		else if((kinect.changeState==1)||(kinect.changeState==-1)){
-			timerPeopleOut.reset();
-			restart=false;
-		}
-	}
-
 }
 void ofApp::peopleOutManager(){
 	if(kinect.changeState==0){
