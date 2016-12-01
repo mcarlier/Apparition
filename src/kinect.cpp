@@ -16,8 +16,9 @@ void kinect::setup(){
       threadDetection.setup(kinect.getDepthPixels());
       threadDetection.startThread();
     }
-    base = kinect.getRgbPixels();
-    base.save("emptyRoom.jpg");//Update : No need
+    saveBase = false;
+    timerSaveBase.setup(2000);
+    timerSaveBase.start(false);
     lastStateDetection = 0;
     stateDetection = 0;
     changeState = 0;
@@ -29,6 +30,7 @@ void kinect::setup(){
 
 void kinect::update(){
     if(initialisationSucces){
+      timerSaveBase.update();
       kinect.update();
       if(kinect.isFrameNew()){
           texRGB = kinect.getRgbPixels();
@@ -39,6 +41,12 @@ void kinect::update(){
           }
       }
       updateState();
+      if (!timerSaveBase.bIsRunning&&!saveBase) {
+        std::cout << "savebase" << '\n';
+        saveBase=true;
+        base = kinect.getRgbPixels();
+        base.save("emptyRoom.jpg");//Update : No need
+      }
     }
 }
 

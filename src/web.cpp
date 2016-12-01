@@ -2,7 +2,7 @@
 int essai = 0;
 void web::setup(){
 
-  NumWebSample = 6;
+  NumWebSample = 10;
   for (size_t i = 0; i < NumWebSample; i++) {
     webSample su;
     su.setup();
@@ -20,8 +20,9 @@ void web::setup(){
   createMesh();
   meshcomplete = false;
 
-  timerMeshDesappeare.setup(500);
+  timerMeshDesappeare.setup(750);
   end = false;
+  waitPeopleToGo = false;
 
 
 
@@ -34,7 +35,6 @@ void web::update(){
     updateEnd();
   }
   else{
-    meshcomplete = true;
     for (size_t i = 0; i < webSamples.size(); i++) {
       if (webSamples[i].state==2) {
         if( webSamples[i].state_appeared == 0 && triangleDrawn < triangulation.getNumTriangles()){
@@ -42,17 +42,16 @@ void web::update(){
           triangleDrawn ++;
         }
         else if ( webSamples[i].state_appeared == 0 && triangleDrawn >= triangulation.getNumTriangles()){
-          webSamples[i].changeState(0);
-          webSamples[i].meshcomplete=true;
+          meshcomplete = true;
         }
       }
       webSamples[i].update();
-      if (webSamples[i].meshcomplete==false) {
-        meshcomplete=false;
-      }
+    }
+    if(meshcomplete&&!waitPeopleToGo){
+      setupEnd();
     }
   }
-  if (meshDesappear == true) {
+  if (meshDesappear==true){
     makeMeshDesappeare();
   }
 }
@@ -78,7 +77,8 @@ void web::updateEnd(){
     }
     if (count==webSamples.size()){
       std::cout << "please go" << '\n';
-      end = false;
+      end=false;
+      waitPeopleToGo=true;
       changeState(0);
     }
 }
@@ -88,16 +88,11 @@ void web::draw(float soundeffect){
     drawSusus(soundeffect);
 }
 void web::changeState(int newState){
-  std::cout << newState << '\n';
   triangleDrawn = 0;
-  int numComplete = 0;
   for (size_t i = 0; i < webSamples.size(); i++) {
     webSamples[i].changeState(newState);
-    if (webSamples[i].meshcomplete==true) {
-      numComplete++;
-    }
   }
-  if(state==2){
+  if((state==2)&&!waitPeopleToGo){
     std::cout << "disappear meash" << '\n';
       meshDesappear = true;
       ofShader temp;
@@ -106,9 +101,6 @@ void web::changeState(int newState){
       Desappeare = temp;
       timerMeshDesappeare.start(false);
   }
-  if(numComplete==webSamples.size()){
-    setupEnd();
-  }
   state = newState;
 
 }
@@ -116,12 +108,28 @@ void web::changeState(int newState){
 void web::setupEnd(){
   std::cout << "endSetup" << '\n';
   end = true;
+  triangleDrawn=triangulation.getNumTriangles()-1;
   for (size_t i = 0; i < webSamples.size(); i++) {
     webSamples[i].end=true;
+    webSamples[i].speed=10;
+    webSamples[i].changeState(2);
   }
 
 }
 
+void web::startAnew(){
+  for (size_t i = 0; i < webSamples.size(); i++) {
+    webSamples[i].clear();
+      webSamples[i].meshEnd.clear();
+      webSamples[i].speed = 6;
+      webSamples[i].end = false;
+      meshDesappear = false;
+      RVB.load("img.jpg");
+      meshcomplete = false;
+      end = false;
+      waitPeopleToGo = false;
+  }
+}
 
 void web::makeMeshDesappeare(){
    timerMeshDesappeare.update();
@@ -135,7 +143,6 @@ void web::makeMeshDesappeare(){
      shaderWeb = Desappeare;
      Desappeare = temp;
    }
-
  }
 
 void web::draw_web(){
@@ -149,17 +156,27 @@ void web::draw_web(){
     shaderWeb.setUniform1f("u_time", ofGetElapsedTimef());
     shaderWeb.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     RVB.bind();
-    if (meshcomplete) {
-      triangulation.triangleMesh.draw();
-    }
-    else{
-      for (size_t i = 0; i < webSamples.size(); i++) {
-         webSamples[i].mesh.draw();
-       }
+    if(!waitPeopleToGo) {
+      if (meshcomplete) {
+        triangulation.triangleMesh.draw();
+      }
+      else{
+        for (size_t i = 0; i < webSamples.size(); i++) {
+           webSamples[i].mesh.draw();
+         }
+      }
     }
     RVB.unbind();
     shaderWeb.end();
+    ofPopMatrix();
+
     if (end) {
+      ofPushMatrix();
+      ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
+      ofScale(ofVec3f(0.8));
+      ofScale(ofVec3f(RVB.getHeight()/424));
+      ofRotate(180,1,0,0);
+      ofSetColor(ofColor::white);
       shaderEnd.begin();
       shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
       shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
@@ -169,9 +186,9 @@ void web::draw_web(){
       }
       base.unbind();
       shaderEnd.end();
-
+      ofPopMatrix();
     }
-    ofPopMatrix();
+
 }
 
 void web::drawSusus(float soundeffect){

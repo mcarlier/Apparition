@@ -41,8 +41,9 @@ class web {
 		ofShader shaderEnd;
 		ofImage base;
 
+		void startAnew();
 
-
+		Boolean waitPeopleToGo;
 
 		int triangleDrawn;
 		vector<ofMeshFace> triangles;

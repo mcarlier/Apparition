@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "ofxKinectV2.h"
 #include "threadDetection.h"
+#include "ofxSimpleTimer.h"
+
 
 
 class kinect {
@@ -23,4 +25,7 @@ class kinect {
 		void updateState();
 		void saveImage();
 		ofShader shader;
+
+		ofxSimpleTimer timerSaveBase;
+		Boolean saveBase;
 };

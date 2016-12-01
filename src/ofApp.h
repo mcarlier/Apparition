@@ -17,9 +17,10 @@ class ofApp : public ofBaseApp{
 		void draw();
 		void exit();
 		void stateManager();
+		void peopleOutManager();
 
-		ofxSimpleTimer timerDetectionStill ;
-		ofxSimpleTimer timer2 ;
+		ofxSimpleTimer timerDetectionStill;
+		ofxSimpleTimer timerPeopleOut;
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -40,8 +41,11 @@ class ofApp : public ofBaseApp{
 		ofShader shader;
 		kinect kinect;
 		sound sound;
-		
+
 		Boolean imageSaved;
+		Boolean restart;
+
+		void startAnew();
 
 
 

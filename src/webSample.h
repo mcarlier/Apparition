@@ -29,7 +29,6 @@ class webSample{
 		void drawWeb();
 
 		Boolean needToReachstart;
-		Boolean meshcomplete;
 		ofVec3f start;
 		ofVec3f tostart;
 		void reachStart();

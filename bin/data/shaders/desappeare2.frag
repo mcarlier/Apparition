@@ -47,7 +47,7 @@ void main() {
 
     // Use the noise function
     float n = noise(pos);
-    outputColor = texture(tex0, texCoordVarying)*vec4(0.3,1,1,1);//*vec4(vec3(1.0), n);
+    outputColor = texture(tex0, texCoordVarying);//*vec4(0.3,1,1,1);//*vec4(vec3(1.0), n);
 
     //outputColor = texture(tex0, texCoordVarying)*vec4(rnd4);//vec3(rnd,rnd2,rnd3),1.0);;
 }

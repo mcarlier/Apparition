@@ -83,7 +83,7 @@ void main(void) {
   n = 1-n;
   vec4 res = vec4(n,n, n,n);//*vec4(rnd);
   //if(res.t!=0)
-  outputColor = texture(tex0, texCoordVarying)*vec4(1,0.3,1,1);;
+  outputColor = texture(tex0, texCoordVarying);//*vec4(1,0.3,1,1);;
 
 }
 

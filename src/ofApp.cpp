@@ -6,32 +6,36 @@ void ofApp::setup(){
 	kinect.setup();
 	web.setup();
 	shader.load("shaders/susu");
-	base = kinect.base;
-	web.base = base;
-
 	sound.setup();
-
 	timerDetectionStill.setup(2000);
-	timer2.setup(750);
+	timerPeopleOut.setup(5000);
 	imageSaved = false;
-	timer2.start(false);
+	restart = false;
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	if (!base.isAllocated()) {
+		base = kinect.base;
+		web.base = base;
+	}
 	ofSoundUpdate();
 	web.update();
 	kinect.update();
 	sound.update();
-	timerDetectionStill.update( ) ;
-	timer2.update( ) ;
+	timerDetectionStill.update();
+	timerPeopleOut.update();
 	stateManager();
 
+	if (restart&&!timerPeopleOut.bIsRunning) {
+		std::cout << "Restart" << '\n';
+		startAnew();
+	}
 	if ((web.state==2)&&(imageSaved==false)&&(web.triangleDrawn>=web.triangulation.getNumTriangles()/2)) {
-		//std::cout << "saveImage" << '\n';
-		//kinect.saveImage();
-		//imageSaved=true;
+		std::cout << "saveImage" << '\n';
+		kinect.saveImage();
+		imageSaved=true;
 	}
 
 
@@ -48,28 +52,34 @@ void ofApp::draw(){
 	ofTranslate(-base.getWidth()/2,-base.getHeight()/2,0);
 	//gui.draw();
 	//shader.begin();
-	shader.setUniform1f("u_time", ofGetElapsedTimef());
-	shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-	base.draw(0,0);
+	//shader.setUniform1f("u_time", ofGetElapsedTimef());
+	//shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+	if (base.isAllocated()) {
+		base.draw(0,0);
+	}
 	ofPopMatrix();
-
-	kinect.draw();
-
+	if((!web.end)&&(!web.waitPeopleToGo)){
+		kinect.draw();
+	}
 	web.draw(sound.avg);
 
 	//sound.draw();
 
 	cam.end();
 	//shader.end();
-
-
-	 timerDetectionStill.draw( 15 , 15 ) ;
-	// timer2.draw( ofGetWidth() /2 + 15 , 15 ) ;
+	timerDetectionStill.draw( 15 , 15 ) ;
+	timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
 }
 
 void ofApp::exit() {
     kinect.threadDetection.stopThread();
 }
+void ofApp::startAnew(){
+	web.startAnew();
+	imageSaved = false;
+	restart = false;
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -85,22 +95,41 @@ void ofApp::keyPressed(int key){
 }
 
 void ofApp::stateManager(){
-	if (kinect.changeState==1) {//someoneDetected
-		web.changeState(1);
-		timerDetectionStill.start(false);
+	if(!web.waitPeopleToGo){
+		if (kinect.changeState==1) {//someoneDetected
+			web.changeState(1);
+			timerDetectionStill.start(false);
+		}
+		else if(kinect.changeState==-1) {//someoneMoving
+			web.changeState(1);
+			timerDetectionStill.reset();
+		}
+		else if(kinect.changeState==0){
+			web.changeState(0);
+			timerDetectionStill.reset();
+		}
+		if ((timerDetectionStill.bIsRunning)&&(web.state!=2)) {
+			if(timerDetectionStill.getNormalizedProgress()-0.95>=0){
+				web.changeState(2);
+			}
+		}
 	}
-	else if(kinect.changeState==-1) {//someoneMoving
-		web.changeState(1);
-		timerDetectionStill.reset();
+	else{
+		if(kinect.changeState==0){
+			timerPeopleOut.start(false);
+			restart=true;
+		}
+		else if((kinect.changeState==1)||(kinect.changeState==-1)){
+			timerPeopleOut.reset();
+			restart=false;
+		}
 	}
-	else if(kinect.changeState==0){
+
+}
+void ofApp::peopleOutManager(){
+	if(kinect.changeState==0){
 		web.changeState(0);
 		timerDetectionStill.reset();
-	}
-	if ((timerDetectionStill.bIsRunning)&&(web.state!=2)) {
-		if(timerDetectionStill.getNormalizedProgress()-0.95>=0){
-			web.changeState(2);
-		}
 	}
 }
 //--------------------------------------------------------------
