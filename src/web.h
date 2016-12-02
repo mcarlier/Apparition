@@ -42,7 +42,7 @@ class web {
 		ofImage base;
 
 		void increaseSpeed();
-		void startAnew();
+		void startAnew(ofImage newImg);
 
 		Boolean waitPeopleToGo;
 

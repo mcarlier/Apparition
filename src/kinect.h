@@ -5,6 +5,7 @@
 #include "threadDetection.h"
 #include "ofxSimpleTimer.h"
 #include "threadSaveImage.h"
+#include "threadLoadImage.h"
 
 
 
@@ -21,6 +22,10 @@ class kinect {
 		ofImage base;
     threadDetection threadDetection;
 		threadSaveImage threadSaveImage;
+		threadLoadImage threadLoadImage;
+		int loadState; //0needTolaunchThread,1 isLoading,2imageisReady;
+		ofImage imageLoaded;
+		void loadNewImage();
 
 		int stateDetection;
 		int lastStateDetection;

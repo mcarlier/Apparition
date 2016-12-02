@@ -131,15 +131,15 @@ void web::increaseSpeed(){
 
 }
 
-void web::startAnew(){
+void web::startAnew(ofImage newImg){
   for (size_t i = 0; i < webSamples.size(); i++) {
-    webSamples[i].clear();
-    changeState(0);
+      webSamples[i].clear();
+      changeState(0);
       webSamples[i].meshEnd.clear();
       webSamples[i].speed = 6;
       webSamples[i].end = false;
       meshDesappear = false;
-      RVB.load("img.jpg");
+      RVB = newImg;
       meshcomplete = false;
       end = false;
       waitPeopleToGo = false;

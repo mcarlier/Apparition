@@ -34,8 +34,7 @@ void ofApp::update(){
 	stateManager();
 
 	if (restart&&!timerPeopleOut.bIsRunning) {
-		std::cout << "Restart" << '\n';
-		startAnew();
+			startAnew();
 	}
 	if ((web.state==2)&&(imageSaved==false)&&(web.triangleDrawn>=web.triangulation.getNumTriangles()/2)) {
 		kinect.saveImage();
@@ -80,11 +79,15 @@ void ofApp::exit() {
     kinect.threadDetection.stopThread();
 }
 void ofApp::startAnew(){
-	web.startAnew();
-	imageSaved = false;
-	restart = false;
+	std::cout << "startAnew" << '\n';
+	kinect.loadNewImage();
+	if(kinect.loadState==2){
+		web.startAnew(kinect.imageLoaded);
+		imageSaved = false;
+		kinect.loadState = 0;
+		restart=false;
+	}
 }
-
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -160,7 +163,9 @@ void ofApp::mousePressed(int x, int y, int button){
 	 std::cout << "y = "<<  y<< '\n';
 	 //std::cout << "saveImage " << '\n';
 	// kinect.saveImage();
-	 web.setupEnd();
+	 //web.setupEnd();
+
+	 startAnew();
 
 
 

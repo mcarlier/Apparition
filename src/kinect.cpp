@@ -22,6 +22,7 @@ void kinect::setup(){
     lastStateDetection = 0;
     stateDetection = 0;
     changeState = 0;
+    loadState = 0;
     shader.load("shaders/susu");
 
 }
@@ -53,6 +54,21 @@ void kinect::saveImage(){
   //ofSaveImage(texRGB, string path,OF_IMAGE_QUALITY_BEST);
   threadSaveImage.start(texRGB,"img.jpg");//Update : No need
 
+}
+void kinect::loadNewImage(){
+  if(loadState==0){
+    threadLoadImage.start();
+    loadState=1;
+  }
+  else if(loadState==1){
+      if (threadLoadImage.imageLoaded.isAllocated()) {
+      imageLoaded = threadLoadImage.imageLoaded;
+      threadLoadImage.stop();
+      loadState=2;
+    }
+
+
+  }
 }
 //--------------------------------------------------------------
 void kinect::draw(){
