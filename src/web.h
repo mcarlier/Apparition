@@ -41,6 +41,7 @@ class web {
 		ofShader shaderEnd;
 		ofImage base;
 
+		void increaseSpeed();
 		void startAnew();
 
 		Boolean waitPeopleToGo;

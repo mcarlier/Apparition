@@ -4,6 +4,7 @@
 #include "ofxKinectV2.h"
 #include "threadDetection.h"
 #include "ofxSimpleTimer.h"
+#include "threadSaveImage.h"
 
 
 
@@ -19,6 +20,8 @@ class kinect {
     ofImage texRGB;
 		ofImage base;
     threadDetection threadDetection;
+		threadSaveImage threadSaveImage;
+
 		int stateDetection;
 		int lastStateDetection;
 		int changeState;

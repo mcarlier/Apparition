@@ -4,7 +4,7 @@ void webSample::setup(){
   NumWebSample++;
   index = NumWebSample;
   position = ofVec3f(0);
-  speed = 6;
+  speed = 4;
   size =(rand()%3)+2;
   susuImg.load("dot.png");
   end = false;

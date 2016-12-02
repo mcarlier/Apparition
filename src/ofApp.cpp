@@ -11,6 +11,7 @@ void ofApp::setup(){
 	timerPeopleOut.setup(5000);
 	imageSaved = false;
 	restart = false;
+	text.setup();
 
 
 }
@@ -21,8 +22,11 @@ void ofApp::update(){
 		base = kinect.base;
 		web.base = base;
 	}
+	else{
+		web.update();
+	}
 	ofSoundUpdate();
-	web.update();
+
 	kinect.update();
 	sound.update();
 	timerDetectionStill.update();
@@ -34,11 +38,10 @@ void ofApp::update(){
 		startAnew();
 	}
 	if ((web.state==2)&&(imageSaved==false)&&(web.triangleDrawn>=web.triangulation.getNumTriangles()/2)) {
-		std::cout << "saveImage" << '\n';
 		kinect.saveImage();
 		imageSaved=true;
 	}
-
+	text.draw();
 
 }
 
@@ -67,8 +70,9 @@ void ofApp::draw(){
 
 	cam.end();
 	//shader.end();
-	timerDetectionStill.draw( 15 , 15 ) ;
-	timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
+	//timerDetectionStill.draw( 15 , 15 ) ;
+	//timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
+	//text.draw();
 
 }
 
@@ -152,9 +156,9 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	// std::cout << "x = "<< x << '\n';
-	// std::cout << "y = "<<  y<< '\n';
-	 std::cout << "saveImage " << '\n';
+	 std::cout << "x = "<< x << '\n';
+	 std::cout << "y = "<<  y<< '\n';
+	 //std::cout << "saveImage " << '\n';
 	// kinect.saveImage();
 	 web.setupEnd();
 

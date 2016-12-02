@@ -42,17 +42,17 @@ void kinect::update(){
       }
       updateState();
       if (!timerSaveBase.bIsRunning&&!saveBase) {
-        std::cout << "savebase" << '\n';
         saveBase=true;
         base = kinect.getRgbPixels();
-        base.save("emptyRoom.jpg");//Update : No need
+        threadSaveImage.start(base,"emptyRoom.jpg");//Update : No need
       }
     }
 }
 
 void kinect::saveImage(){
   //ofSaveImage(texRGB, string path,OF_IMAGE_QUALITY_BEST);
-  texRGB.save("img.jpg");
+  threadSaveImage.start(texRGB,"img.jpg");//Update : No need
+
 }
 //--------------------------------------------------------------
 void kinect::draw(){

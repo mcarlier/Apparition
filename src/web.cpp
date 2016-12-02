@@ -45,6 +45,7 @@ void web::update(){
         }
       }
       webSamples[i].update();
+      increaseSpeed();
     }
     if(meshcomplete&&!waitPeopleToGo){
       setupEnd();
@@ -65,7 +66,7 @@ void web::updateEnd(){
         ofMeshFace t;
         webSamples[i].addTriangle_appeared(t);
         webSamples[i].speed = 6;
-        webSamples[i].changeState(0);
+        //webSamples[i].changeState(1);
         webSamples[i].end = false;
       }
 
@@ -73,7 +74,7 @@ void web::updateEnd(){
       if (webSamples[i].end==false) {
         count++;
         end=true;
-        webSamples[i].changeState(0);
+        //webSamples[i].changeState(0);
       }
 
     }
@@ -81,7 +82,7 @@ void web::updateEnd(){
       std::cout << "please go" << '\n';
       end=false;
       waitPeopleToGo=true;
-      changeState(0);
+      changeState(1);
     }
 }
 void web::draw(float soundeffect){
@@ -119,9 +120,21 @@ void web::setupEnd(){
 
 }
 
+void web::increaseSpeed(){
+  if (triangleDrawn>=triangulation.getNumTriangles()*5/6) {
+      for (size_t i = 0; i < webSamples.size(); i++) {
+        if (webSamples[i].speed<10) {
+            webSamples[i].speed+=0.01;
+        }
+    }
+  }
+
+}
+
 void web::startAnew(){
   for (size_t i = 0; i < webSamples.size(); i++) {
     webSamples[i].clear();
+    changeState(0);
       webSamples[i].meshEnd.clear();
       webSamples[i].speed = 6;
       webSamples[i].end = false;

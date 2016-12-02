@@ -4,6 +4,7 @@
 #include "web.h"
 #include "kinect.h"
 #include "sound.h"
+#include "text.h"
 #include "ofxSimpleTimer.h"
 
 
@@ -42,7 +43,7 @@ class ofApp : public ofBaseApp{
 		ofShader shader;
 		kinect kinect;
 		sound sound;
-
+		text text;
 		Boolean imageSaved;
 		Boolean restart;
 
