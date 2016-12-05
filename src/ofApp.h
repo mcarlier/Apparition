@@ -6,6 +6,7 @@
 #include "sound.h"
 #include "text.h"
 #include "ofxSimpleTimer.h"
+#include "jsonManager.h"
 
 
 
@@ -36,6 +37,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+		jsonManager counterUser;
 		ofEasyCam cam;
 		web web;
 

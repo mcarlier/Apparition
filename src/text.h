@@ -4,9 +4,10 @@
 
 class text {
 	public:
-		void setup();
-		void update();
-		void draw();
+		void setup(string count);
+		void update(string count);
+		void draw(Boolean waitToGo, Boolean end, int statSusu);
 
     ofTrueTypeFont myfont;
+		string numberOfuser;
 };

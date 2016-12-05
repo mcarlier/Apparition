@@ -20,7 +20,7 @@ void web::setup(){
   createMesh();
   meshcomplete = false;
 
-  timerMeshDesappeare.setup(750);
+  timerMeshDesappeare.setup(2000);
   end = false;
   waitPeopleToGo = false;
 
@@ -85,9 +85,9 @@ void web::updateEnd(){
       changeState(1);
     }
 }
-void web::draw(float soundeffect){
+void web::draw(ofShader shader,float soundeffect){
     ofSetColor(ofColor(255,255,255,100));
-    draw_web();
+    draw_web(shader);
     drawSusus(soundeffect);
 }
 void web::changeState(int newState){
@@ -160,16 +160,16 @@ void web::makeMeshDesappeare(){
    }
  }
 
-void web::draw_web(){
+void web::draw_web(ofShader shader){
     ofPushMatrix();
     ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
     ofScale(ofVec3f(0.8));
     ofScale(ofVec3f(RVB.getHeight()/424));
     ofRotate(180,1,0,0);
     ofSetColor(ofColor::white);
-    shaderWeb.begin();
-    shaderWeb.setUniform1f("u_time", ofGetElapsedTimef());
-    shaderWeb.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+    shader.begin();
+    shader.setUniform1f("u_time", ofGetElapsedTimef());
+    shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     RVB.bind();
     if(!waitPeopleToGo) {
       if (meshcomplete) {
@@ -182,28 +182,15 @@ void web::draw_web(){
       }
     }
     RVB.unbind();
-    shaderWeb.end();
-    ofPopMatrix();
-
     if (end) {
-      ofPushMatrix();
-      ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
-      ofScale(ofVec3f(0.8));
-      ofScale(ofVec3f(RVB.getHeight()/424));
-      ofRotate(180,1,0,0);
-      ofSetColor(ofColor::white);
-      shaderEnd.begin();
-      shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
-      shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
       base.bind();
       for (size_t i = 0; i < webSamples.size(); i++) {
         webSamples[i].meshEnd.draw();
       }
       base.unbind();
-      shaderEnd.end();
-      ofPopMatrix();
     }
-
+    shader.end();
+    ofPopMatrix(); 
 }
 
 void web::drawSusus(float soundeffect){

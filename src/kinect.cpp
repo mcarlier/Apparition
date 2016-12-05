@@ -23,7 +23,7 @@ void kinect::setup(){
     stateDetection = 0;
     changeState = 0;
     loadState = 0;
-    shader.load("shaders/susu");
+    //shader.load("shaders/susu");
 
 }
 
@@ -71,12 +71,12 @@ void kinect::loadNewImage(){
   }
 }
 //--------------------------------------------------------------
-void kinect::draw(){
+void kinect::draw(ofShader shader){
   if (texRGB.isAllocated()){
     ofPushMatrix();
     ofScale(ofVec3f(0.65));
     ofTranslate(-texRGB.getWidth()/2,-texRGB.getHeight()/2,0);
-    shader.begin();
+     shader.begin();
     texRGB.draw(0,0);
     shader.end();
     ofPopMatrix();

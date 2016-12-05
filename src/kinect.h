@@ -14,7 +14,7 @@ class kinect {
 	public:
 		void setup();
 		void update();
-		void draw();
+		void draw(ofShader shader);
 
 		Boolean initialisationSucces;
 		ofxKinectV2 kinect;
@@ -32,7 +32,7 @@ class kinect {
 		int changeState;
 		void updateState();
 		void saveImage();
-		ofShader shader;
+		//ofShader shader;
 
 		ofxSimpleTimer timerSaveBase;
 		Boolean saveBase;

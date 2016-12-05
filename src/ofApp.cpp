@@ -5,13 +5,19 @@ void ofApp::setup(){
 	//ofSetVerticalSync(true);
 	kinect.setup();
 	web.setup();
-	shader.load("shaders/susu");
+	shader.load("shaders/glitch");
 	sound.setup();
 	timerDetectionStill.setup(2000);
 	timerPeopleOut.setup(5000);
 	imageSaved = false;
 	restart = false;
-	text.setup();
+	counterUser.setup();
+	text.setup(counterUser.getString());
+
+
+	std::cout << counterUser.getInt() << '\n';
+	std::cout << counterUser.getString() << '\n';
+	counterUser.increment();
 
 
 }
@@ -38,9 +44,9 @@ void ofApp::update(){
 	}
 	if ((web.state==2)&&(imageSaved==false)&&(web.triangleDrawn>=web.triangulation.getNumTriangles()/2)) {
 		kinect.saveImage();
+		counterUser.increment();
 		imageSaved=true;
 	}
-	text.draw();
 
 }
 
@@ -53,25 +59,27 @@ void ofApp::draw(){
 	ofPushMatrix();
 	ofScale(ofVec3f(0.65));
 	ofTranslate(-base.getWidth()/2,-base.getHeight()/2,0);
-	//shader.begin();
-	//shader.setUniform1f("u_time", ofGetElapsedTimef());
-	//shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+	shader.begin();
+	shader.setUniform1f("u_time", ofGetElapsedTimef());
+	std::cout <<ofGetElapsedTimef() << '\n';
+	shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
 	if (base.isAllocated()) {
 		base.draw(0,0);
 	}
+	shader.end();
 	ofPopMatrix();
 	if((!web.end)&&(!web.waitPeopleToGo)){
-		kinect.draw();
+		kinect.draw(shader);
 	}
-	web.draw(sound.avg);
+	web.draw(shader,sound.avg);
 
 	//sound.draw();
 
 	cam.end();
-	//shader.end();
+
 	//timerDetectionStill.draw( 15 , 15 ) ;
 	//timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
-	//text.draw();
+	text.draw(web.waitPeopleToGo,web.end,web.state);
 
 }
 
@@ -86,6 +94,7 @@ void ofApp::startAnew(){
 		imageSaved = false;
 		kinect.loadState = 0;
 		restart=false;
+		text.update(counterUser.getString());
 	}
 }
 
@@ -161,11 +170,11 @@ void ofApp::mouseDragged(int x, int y, int button){
 void ofApp::mousePressed(int x, int y, int button){
 	 std::cout << "x = "<< x << '\n';
 	 std::cout << "y = "<<  y<< '\n';
-	 //std::cout << "saveImage " << '\n';
-	// kinect.saveImage();
-	 //web.setupEnd();
 
-	 startAnew();
+	 	//std::cout << "saveImage " << '\n';
+		//kinect.saveImage();
+	 	web.setupEnd();
+	 	//startAnew();
 
 
 

@@ -78,7 +78,7 @@ void main() {
                 vec3(0.666667,1,1),
                 clamp(length(r.x),0.0,1.0));
 
-    outputColor = texture(tex0, texCoordVarying)*(vec4(1,1,1,1)-vec4((f*f*f+.6*f*f+.5*f)*color,color.x));
+    outputColor = texture(tex0, texCoordVarying)*vec4(1.0,0.5,1.0,1.0);//(vec4(1,1,1,1)-vec4((f*f*f+.6*f*f+.5*f)*color,color.x));
 }
 
 	//outputColor = texture(tex0, texCoordVarying)*vec4(color,1.0);

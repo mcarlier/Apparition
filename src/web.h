@@ -10,9 +10,9 @@ class web {
 	public:
 		void setup();
 		void update();
-		void draw(float soundeffect);
+		void draw(ofShader shader,float soundeffect);
 		void drawSusus(float soundeffect);
-		void draw_web();
+		void draw_web(ofShader shader);
 		void changeState(int newState); // 0 = rest,1 = detected 2 = drawing;
 		int state;
 		vector<webSample> webSamples;
