@@ -25,7 +25,7 @@ class webSample{
 		ofImage susuImg;
 
 
-		void drawSusu(float sound);
+		void drawSusu(ofShader shader,float sound);
 		void drawWeb();
 
 		Boolean needToReachstart;

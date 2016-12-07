@@ -18,6 +18,11 @@ void ofApp::setup(){
 	std::cout << counterUser.getInt() << '\n';
 	std::cout << counterUser.getString() << '\n';
 	counterUser.increment();
+	gui.setup(); // most of the time you don't need a name
+	gui.add(radius.setup("radius", 140, 10, 300));
+	gui.add(random_base.setup("random_base", 2, 0, 5));
+	gui.add(b.setup("b", 0.5, 0, 2));
+	gui.add(c.setup("c", 2, 0, 10));
 
 
 }
@@ -48,6 +53,7 @@ void ofApp::update(){
 		imageSaved=true;
 	}
 
+
 }
 
 //--------------------------------------------------------------
@@ -61,8 +67,13 @@ void ofApp::draw(){
 	ofTranslate(-base.getWidth()/2,-base.getHeight()/2,0);
 	shader.begin();
 	shader.setUniform1f("u_time", ofGetElapsedTimef());
-	std::cout <<ofGetElapsedTimef() << '\n';
+	//std::cout <<ofGetElapsedTimef() << '\n';
 	shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+	shader.setUniform1f("radius", radius);
+	shader.setUniform1f("random_base", random_base);
+	shader.setUniform1f("b", b);
+	shader.setUniform1f("c", c);
+
 	if (base.isAllocated()) {
 		base.draw(0,0);
 	}
@@ -76,10 +87,12 @@ void ofApp::draw(){
 	//sound.draw();
 
 	cam.end();
+	//gui.draw();
 
 	//timerDetectionStill.draw( 15 , 15 ) ;
 	//timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
 	text.draw(web.waitPeopleToGo,web.end,web.state);
+
 
 }
 

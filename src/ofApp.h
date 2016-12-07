@@ -7,6 +7,8 @@
 #include "text.h"
 #include "ofxSimpleTimer.h"
 #include "jsonManager.h"
+#include "ofxGui.h"
+
 
 
 
@@ -50,6 +52,11 @@ class ofApp : public ofBaseApp{
 		Boolean restart;
 
 		void startAnew();
+		ofxPanel gui;
+		ofxFloatSlider radius;
+		ofxFloatSlider random_base;
+		ofxFloatSlider b;
+		ofxFloatSlider c;
 
 
 };

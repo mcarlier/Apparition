@@ -6,7 +6,7 @@ void webSample::setup(){
   position = ofVec3f(0);
   speed = 6;
   size =(rand()%3)+2;
-  susuImg.load("dot22.png");
+  susuImg.load("dot.png");
   end = false;
 
 }
@@ -24,9 +24,11 @@ void webSample::update(){
 }
 
 //draw sphere around the webSample.
-void  webSample::drawSusu(float soundeffect){
+void  webSample::drawSusu(ofShader shader,float soundeffect){
   float a = 10*size + (soundeffect*1000)*5;
+  shader.begin();
   susuImg.draw(position.x-(a/2),position.y-(a/2),a,a);
+  shader.end();
 }
 
 //Draw the web

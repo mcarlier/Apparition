@@ -88,7 +88,7 @@ void web::updateEnd(){
 void web::draw(ofShader shader,float soundeffect){
     ofSetColor(ofColor(255,255,255,100));
     draw_web(shader);
-    drawSusus(soundeffect);
+    drawSusus(shader,soundeffect);
 }
 void web::changeState(int newState){
   triangleDrawn = 0;
@@ -190,17 +190,17 @@ void web::draw_web(ofShader shader){
       base.unbind();
     }
     shader.end();
-    ofPopMatrix(); 
+    ofPopMatrix();
 }
 
-void web::drawSusus(float soundeffect){
+void web::drawSusus(ofShader shader,float soundeffect){
   ofPushMatrix();
   ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
   ofScale(ofVec3f(0.8));
   ofScale(ofVec3f(RVB.getHeight()/424));
   ofRotate(180,1,0,0);
   for (size_t i = 0; i < webSamples.size(); i++) {
-     webSamples[i].drawSusu(soundeffect);
+     webSamples[i].drawSusu(shader,soundeffect);
    }
   ofPopMatrix();
 }

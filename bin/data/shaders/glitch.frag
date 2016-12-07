@@ -6,6 +6,7 @@ uniform vec2 u_resolution;
 uniform float u_time;
 
 
+
 in vec2 texCoordVarying;
 out vec4 outputColor;
 
@@ -40,16 +41,15 @@ vec4 convergence() {
   vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
 
   vec4 col = texture(tex0,texCoordVarying);
-  int a = int(u_time);
+  int a = int(u_time/4);
   vec4 col_r = texture(tex0,texCoordVarying + vec2(-35.0*random(vec2(u_time))*u_time,0));
-
   vec4 col_l = texture(tex0,texCoordVarying + vec2( 35.0*random(vec2(a)),0));
   vec4 col_g = texture(tex0,texCoordVarying + vec2( -70.5*random(vec2(a)),0));
 
 
-  col.b = col.b + col_r.b*max(1.0,sin(st.y*2)*0.5)*random(vec2(2));
-  col.r = col.r + col_l.r*max(1.0,sin(st.y*2)*0.5)*random(vec2(2));
-  col.g = col.g + col_g.g*max(1.0,sin(st.y*2)*0.5)*random(vec2(2));
+  col.b = col.b + col_r.b*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.r = col.r + col_l.r*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.g = col.g + col_g.g*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
 
   return col;
 }
