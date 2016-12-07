@@ -16,7 +16,7 @@ public:
 
     void threadedFunction()
     { std::cout << "save "<<nameImg<< '\n';
-      imageToSave.save(nameImg);
+      //imageToSave.save(nameImg);
     };
 
     string nameImg;

@@ -98,6 +98,9 @@ void ofApp::draw(){
 
 void ofApp::exit() {
     kinect.threadDetection.stopThread();
+		kinect.threadLoadImage.stopThread();
+		kinect.threadSaveImage.stopThread();
+
 }
 void ofApp::startAnew(){
 	std::cout << "startAnew" << '\n';
