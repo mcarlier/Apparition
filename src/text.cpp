@@ -3,10 +3,10 @@
 void text::setup(string count){
 
    myfont.load("unna.ttf", 32);
-   pleasesitJPN.load("staystilljpn.png");
-   userJPN.load("usersJPN.png");
-   youwereJPN.load("youwereJPN.png");
-   participationJPN.load("participation.png");
+   pleasesitJPN.load("text/staystilljpn.png");
+   userJPN.load("text/usersJPN.png");
+   youwereJPN.load("text/youwereJPN.png");
+   participationJPN.load("text/participation.png");
    user = count;
    numberOfUser = stoi(user);
 
