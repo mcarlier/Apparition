@@ -9,7 +9,7 @@ void web::setup(){
     webSamples.push_back(su);
   }
   changeState(0);
-  shaderWeb.load("shaders/desappeare2");
+  //shaderWeb.load("shaders/desappeare2");
   shaderEnd.load("shaders/end");
 
   meshDesappear = false;
@@ -145,14 +145,9 @@ void web::makeMeshDesappeare(){
    timerMeshDesappeare.update();
    if(!timerMeshDesappeare.bIsRunning){
      meshDesappear = false;
-     std::cout << "ici" << '\n';
      for (size_t i = 0; i < webSamples.size(); i++) {
        webSamples[i].clear();
      }
-     ofShader temp;
-     temp = shaderWeb;
-     shaderWeb = Desappeare;
-     Desappeare = temp;
    }
  }
 
@@ -170,13 +165,10 @@ void web::draw_web(ofShader shader){
     ofScale(ofVec3f(RVB.getHeight()/424));
     ofRotate(180,1,0,0);
     ofSetColor(ofColor::white);
-
-
     sh.begin();
     sh.setUniform1f("u_time", ofGetElapsedTimef());
     sh.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     sh.setUniform1f("timer", timerMeshDesappeare.getNormalizedProgress());
-    std::cout << timerMeshDesappeare.getNormalizedProgress() << '\n';
 
     RVB.bind();
     if(!waitPeopleToGo) {
@@ -190,14 +182,28 @@ void web::draw_web(ofShader shader){
       }
     }
     RVB.unbind();
+    sh.end();
     if (end) {
+      sh.begin();
       base.bind();
       for (size_t i = 0; i < webSamples.size(); i++) {
         webSamples[i].meshEnd.draw();
       }
       base.unbind();
+      sh.end();
+      shaderEnd.begin();
+      base.bind();
+      shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
+      shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+      for (size_t i = 0; i < webSamples.size(); i++) {
+      shaderEnd.setUniform1f("timer", webSamples[i].timerappearance.getNormalizedProgress());
+        webSamples[i].lastFace.draw();
+      }
+      base.unbind();
+      shaderEnd.end();
+
     }
-    sh.end();
+
     ofPopMatrix();
 }
 

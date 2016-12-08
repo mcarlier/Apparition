@@ -1,5 +1,6 @@
 #pragma once
 #include "ofMain.h"
+#include "ofxSimpleTimer.h"
 
 
 class webSample{
@@ -18,8 +19,12 @@ class webSample{
 		void clear();
 		int state;
 
+		//end
 		ofMesh meshEnd;
 		Boolean end;
+		ofMesh lastFace;
+		ofxSimpleTimer timerappearance ;
+
 
 
 		ofImage susuImg;
@@ -32,6 +37,8 @@ class webSample{
 		ofVec3f start;
 		ofVec3f tostart;
 		void reachStart();
+
+
 
 
 		//rest
