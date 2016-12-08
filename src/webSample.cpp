@@ -8,7 +8,7 @@ void webSample::setup(){
   size =(rand()%3)+2;
   susuImg.load("dot.png");
   end = false;
-  timerappearance.setup(100);
+  timerappearance.setup(500);
 
 }
 
@@ -120,26 +120,33 @@ void webSample::addTriangle_appeared(ofMeshFace points){
     mesh.addTexCoord(currentTriangle_appeared.getTexCoord(2));
   }
   else{
-    meshEnd.addVertex(currentTriangle_appeared.getVertex(0));
-    meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(0));
-    meshEnd.addVertex(currentTriangle_appeared.getVertex(1));
-    meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(1));
-    meshEnd.addVertex(currentTriangle_appeared.getVertex(2));
-    meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(2));
-    lastFace.clear();
-    lastFace.addVertex(currentTriangle_appeared.getVertex(0));
-    lastFace.addTexCoord(currentTriangle_appeared.getTexCoord(0));
-    lastFace.addVertex(currentTriangle_appeared.getVertex(1));
-    lastFace.addTexCoord(currentTriangle_appeared.getTexCoord(1));
-    lastFace.addVertex(currentTriangle_appeared.getVertex(2));
-    lastFace.addTexCoord(currentTriangle_appeared.getTexCoord(2));
-    timerappearance.stop();
-    timerappearance.start(false);
+    updatefaceEnd();
+    faceAppeare f;
+    f.setup(8000,points);
+    faces.push_back(f);
+    // meshEnd.addVertex(currentTriangle_appeared.getVertex(0));
+    // meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(0));
+    // meshEnd.addVertex(currentTriangle_appeared.getVertex(1));
+    // meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(1));
+    // meshEnd.addVertex(currentTriangle_appeared.getVertex(2));
+    // meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(2));
+
   }
 
 
   currentTriangle_appeared = points;
   changeStatus_appeared(1);
+}
+
+void webSample::updatefaceEnd(){
+  std::cout << "updateEnd" << '\n';
+  for (int j = 0; j < faces.size(); j++) {
+    // std::cout <<faces[j].timerappearance.getNormalizedProgress()<< '\n';
+    if (faces[j].timerappearance.getNormalizedProgress()<=0) {
+      meshEnd.append(faces[j].lastFace);
+      faces.erase(faces.begin()+j);
+    }
+  }
 }
 
 //0 change goal, 1 draw first edge, 2 draw 2nd edge, 3 draw third edge

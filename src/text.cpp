@@ -59,8 +59,5 @@ void text::draw(Boolean waitToGo, Boolean end, int statSusu){
 
  }
 
-//  gui.draw();
-
-
-
+ //gui.draw();
 }

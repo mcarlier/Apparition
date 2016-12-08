@@ -29,6 +29,7 @@ void web::setup(){
 
 //--------------------------------------------------------------
 void web::update(){
+  std::cout << timerMeshDesappeare.getNormalizedProgress() << '\n';
   if(end==true){
     updateEnd();
   }
@@ -172,14 +173,14 @@ void web::draw_web(ofShader shader){
 
     RVB.bind();
     if(!waitPeopleToGo) {
-      if (meshcomplete) {
+      // if (meshcomplete) {
         triangulation.triangleMesh.draw();
-      }
-      else{
-        for (size_t i = 0; i < webSamples.size(); i++) {
-           webSamples[i].mesh.draw();
-         }
-      }
+      // }
+      // else{
+      //   for (size_t i = 0; i < webSamples.size(); i++) {
+      //      webSamples[i].mesh.draw();
+      //    }
+      // }
     }
     RVB.unbind();
     sh.end();
@@ -196,8 +197,10 @@ void web::draw_web(ofShader shader){
       shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
       shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
       for (size_t i = 0; i < webSamples.size(); i++) {
-      shaderEnd.setUniform1f("timer", webSamples[i].timerappearance.getNormalizedProgress());
-        webSamples[i].lastFace.draw();
+        for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
+          shaderEnd.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());
+          webSamples[i].faces[j].lastFace.draw();
+        }
       }
       base.unbind();
       shaderEnd.end();
@@ -208,15 +211,15 @@ void web::draw_web(ofShader shader){
 }
 
 void web::drawSusus(ofShader shader,float soundeffect){
-  ofPushMatrix();
-  ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
-  ofScale(ofVec3f(0.8));
-  ofScale(ofVec3f(RVB.getHeight()/424));
-  ofRotate(180,1,0,0);
-  for (size_t i = 0; i < webSamples.size(); i++) {
-     webSamples[i].drawSusu(shader,soundeffect);
-   }
-  ofPopMatrix();
+  // ofPushMatrix();
+  // ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
+  // ofScale(ofVec3f(0.8));
+  // ofScale(ofVec3f(RVB.getHeight()/424));
+  // ofRotate(180,1,0,0);
+  // for (size_t i = 0; i < webSamples.size(); i++) {
+  //    webSamples[i].drawSusu(shader,soundeffect);
+  //  }
+  // ofPopMatrix();
 }
 
 //Define the sort for ordering the drawing of the triangles

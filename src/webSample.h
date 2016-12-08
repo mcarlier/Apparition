@@ -1,5 +1,6 @@
 #pragma once
 #include "ofMain.h"
+#include "faceAppeare.h"
 #include "ofxSimpleTimer.h"
 
 
@@ -23,7 +24,9 @@ class webSample{
 		ofMesh meshEnd;
 		Boolean end;
 		ofMesh lastFace;
-		ofxSimpleTimer timerappearance ;
+		ofxSimpleTimer timerappearance;
+		vector<faceAppeare> faces;
+		void updatefaceEnd();
 
 
 

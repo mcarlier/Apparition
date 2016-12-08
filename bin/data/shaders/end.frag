@@ -54,8 +54,18 @@ vec4 convergence() {
 
 void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
-    if((timer<0.98)||(timer>=0)){
-      outputColor = texture(tex0, texCoordVarying)*convergence();//*vec4(1,1,1,0);
+    // if((timer<0.98)||(timer>0)){
+    //   outputColor = convergence()*vec4(1,1,1,timer);
+    // }
+    // else{
+    //   outputColor=convergence();
+    // }
+
+    if((timer<0.98)&&(timer>0)){
+      outputColor = convergence()*vec4(1,1,1,timer);
+    }
+    else{
+      outputColor=convergence();
     }
 
     //outputColor = texture(tex0, texCoordVarying)*vec4(1,1,sin(u_time),1);//-vec4((f*f*f+.6*f*f+.5*f)*color,color.x));
