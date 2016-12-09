@@ -26,7 +26,8 @@ class webSample{
 		ofMesh lastFace;
 		ofxSimpleTimer timerappearance;
 		vector<faceAppeare> faces;
-		void updatefaceEnd();
+		void updatefaces();
+		void chekFaceCompleted();
 
 
 

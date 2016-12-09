@@ -25,6 +25,7 @@ class web {
 		// vector <ofVec3f> sizesSusu;
 		ofShader shaderSusu;
 		ofShader shaderWeb;
+		ofShader shaderBegin;
 
 		ofImage RVB;
 		void createMesh();

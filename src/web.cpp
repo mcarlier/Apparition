@@ -14,6 +14,7 @@ void web::setup(){
 
   meshDesappear = false;
   Desappeare.load("shaders/desappeare");
+  shaderBegin.load("shaders/begin");
 
   RVB.load("img.jpg");
   createMesh();
@@ -29,12 +30,12 @@ void web::setup(){
 
 //--------------------------------------------------------------
 void web::update(){
-  std::cout << timerMeshDesappeare.getNormalizedProgress() << '\n';
   if(end==true){
     updateEnd();
   }
   else{
     for (size_t i = 0; i < webSamples.size(); i++) {
+      webSamples[i].updatefaces();
       if (webSamples[i].state==2) {
         if( webSamples[i].state_appeared == 0 && triangleDrawn < triangulation.getNumTriangles()){
           webSamples[i].addTriangle_appeared(triangles[triangleDrawn]);
@@ -58,6 +59,7 @@ void web::update(){
 void web::updateEnd(){
   int count=0;
   for (size_t i = 0; i < webSamples.size(); i++) {
+      webSamples[i].updatefaces();
       if( webSamples[i].state_appeared == 0 &&triangleDrawn>=0){
         webSamples[i].addTriangle_appeared(triangles[triangleDrawn]);
         triangleDrawn--;
@@ -66,7 +68,6 @@ void web::updateEnd(){
         ofMeshFace t;
         webSamples[i].addTriangle_appeared(t);
         webSamples[i].speed = 6;
-        //webSamples[i].changeState(1);
         webSamples[i].end = false;
       }
 
@@ -74,7 +75,6 @@ void web::updateEnd(){
       if (webSamples[i].end==false) {
         count++;
         end=true;
-        //webSamples[i].changeState(0);
       }
 
     }
@@ -148,17 +148,21 @@ void web::makeMeshDesappeare(){
      meshDesappear = false;
      for (size_t i = 0; i < webSamples.size(); i++) {
        webSamples[i].clear();
+       webSamples[i].faces.erase(webSamples[i].faces.begin(),webSamples[i].faces.begin()+webSamples[i].faces.size());
      }
    }
  }
 
 void web::draw_web(ofShader shader){
     ofShader sh;
+    ofShader sh2;
     if(meshDesappear){
         sh = Desappeare;
+        sh2 = Desappeare;
     }
     else{
       sh = shader;
+      sh2 = shaderEnd;
     }
     ofPushMatrix();
     ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
@@ -170,20 +174,61 @@ void web::draw_web(ofShader shader){
     sh.setUniform1f("u_time", ofGetElapsedTimef());
     sh.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     sh.setUniform1f("timer", timerMeshDesappeare.getNormalizedProgress());
-
     RVB.bind();
     if(!waitPeopleToGo) {
-      // if (meshcomplete) {
+     if (meshcomplete) {
         triangulation.triangleMesh.draw();
-      // }
-      // else{
-      //   for (size_t i = 0; i < webSamples.size(); i++) {
-      //      webSamples[i].mesh.draw();
-      //    }
-      // }
+        RVB.unbind();
+        sh.end();
+        shaderEnd.begin();
+        RVB.bind();
+        shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
+        shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+        for (size_t i = 0; i < webSamples.size(); i++) {
+          for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
+            if(meshDesappear){shaderEnd.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());}
+            else{shaderEnd.setUniform1f("timer", 1-timerMeshDesappeare.getNormalizedProgress());}
+            if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==1)){
+              webSamples[i].faces[j].lastFace.draw();
+            }
+          }
+        }
+        RVB.unbind();
+        shaderEnd.end();
+      }
+      else{
+        for (size_t i = 0; i < webSamples.size(); i++) {
+           webSamples[i].mesh.draw();
+         }
+         RVB.unbind();
+         sh.end();
+         sh2.begin();
+         RVB.bind();
+         sh2.setUniform1f("u_time", ofGetElapsedTimef());
+         sh2.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+         for (size_t i = 0; i < webSamples.size(); i++) {
+           for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
+             sh2.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());
+             if(!meshDesappear){sh2.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());}
+             else{
+               if(webSamples[i].faces[j].timerappearance.getNormalizedProgress()>=0.1){
+                 sh2.setUniform1f("timer", 1-webSamples[i].faces[j].timerappearance.getNormalizedProgress()+timerMeshDesappeare.getNormalizedProgress());
+               }
+               else{
+                 sh2.setUniform1f("timer", timerMeshDesappeare.getNormalizedProgress());
+               }
+             }
+
+             if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==1)){
+               webSamples[i].faces[j].lastFace.draw();
+             }
+           }
+         }
+         RVB.unbind();
+         sh2.end();
+      }
     }
-    RVB.unbind();
-    sh.end();
+
     if (end) {
       sh.begin();
       base.bind();
@@ -199,7 +244,9 @@ void web::draw_web(ofShader shader){
       for (size_t i = 0; i < webSamples.size(); i++) {
         for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
           shaderEnd.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());
-          webSamples[i].faces[j].lastFace.draw();
+          if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==2)){
+            webSamples[i].faces[j].lastFace.draw();
+          }
         }
       }
       base.unbind();
@@ -211,15 +258,15 @@ void web::draw_web(ofShader shader){
 }
 
 void web::drawSusus(ofShader shader,float soundeffect){
-  // ofPushMatrix();
-  // ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
-  // ofScale(ofVec3f(0.8));
-  // ofScale(ofVec3f(RVB.getHeight()/424));
-  // ofRotate(180,1,0,0);
-  // for (size_t i = 0; i < webSamples.size(); i++) {
-  //    webSamples[i].drawSusu(shader,soundeffect);
-  //  }
-  // ofPopMatrix();
+  ofPushMatrix();
+  ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
+  ofScale(ofVec3f(0.8));
+  ofScale(ofVec3f(RVB.getHeight()/424));
+  ofRotate(180,1,0,0);
+  for (size_t i = 0; i < webSamples.size(); i++) {
+     webSamples[i].drawSusu(shader,soundeffect);
+   }
+  ofPopMatrix();
 }
 
 //Define the sort for ordering the drawing of the triangles

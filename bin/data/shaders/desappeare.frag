@@ -58,7 +58,7 @@ void main() {
       outputColor = convergence();
     }
     else if((timer<0.98)&&(timer>0)){
-      outputColor = vec4(1,1,1,1-timer)*convergence();
+      outputColor = convergence()*vec4(1,1,1,1-timer);
     }
 }
 

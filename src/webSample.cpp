@@ -112,25 +112,22 @@ void webSample::addTriangle_appeared(ofMeshFace points){
     tostart_appeared = points.getVertex(0)-position;
   }
   if(!end){
-    mesh.addVertex(currentTriangle_appeared.getVertex(0));
-    mesh.addTexCoord(currentTriangle_appeared.getTexCoord(0));
-    mesh.addVertex(currentTriangle_appeared.getVertex(1));
-    mesh.addTexCoord(currentTriangle_appeared.getTexCoord(1));
-    mesh.addVertex(currentTriangle_appeared.getVertex(2));
-    mesh.addTexCoord(currentTriangle_appeared.getTexCoord(2));
+    // mesh.addVertex(currentTriangle_appeared.getVertex(0));
+    // mesh.addTexCoord(currentTriangle_appeared.getTexCoord(0));
+    // mesh.addVertex(currentTriangle_appeared.getVertex(1));
+    // mesh.addTexCoord(currentTriangle_appeared.getTexCoord(1));
+    // mesh.addVertex(currentTriangle_appeared.getVertex(2));
+    // mesh.addTexCoord(currentTriangle_appeared.getTexCoord(2));
+    chekFaceCompleted();
+    faceAppeare f;
+    f.setup(4000,points,1);
+    faces.push_back(f);
   }
   else{
-    updatefaceEnd();
+    chekFaceCompleted();
     faceAppeare f;
-    f.setup(8000,points);
+    f.setup(1000,points,2);
     faces.push_back(f);
-    // meshEnd.addVertex(currentTriangle_appeared.getVertex(0));
-    // meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(0));
-    // meshEnd.addVertex(currentTriangle_appeared.getVertex(1));
-    // meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(1));
-    // meshEnd.addVertex(currentTriangle_appeared.getVertex(2));
-    // meshEnd.addTexCoord(currentTriangle_appeared.getTexCoord(2));
-
   }
 
 
@@ -138,13 +135,31 @@ void webSample::addTriangle_appeared(ofMeshFace points){
   changeStatus_appeared(1);
 }
 
-void webSample::updatefaceEnd(){
-  std::cout << "updateEnd" << '\n';
+void webSample::chekFaceCompleted(){
   for (int j = 0; j < faces.size(); j++) {
-    // std::cout <<faces[j].timerappearance.getNormalizedProgress()<< '\n';
     if (faces[j].timerappearance.getNormalizedProgress()<=0) {
-      meshEnd.append(faces[j].lastFace);
+      if(faces[j].type==2){
+        meshEnd.append(faces[j].lastFace);
+      }
+      else{
+        mesh.append(faces[j].lastFace);
+      }
       faces.erase(faces.begin()+j);
+    }
+  }
+}
+
+void webSample::updatefaces(){
+  for (int j = 0; j < faces.size(); j++) {
+    if (faces[j].timerappearance.bIsRunning) {
+      if (faces[j].timerappearance.getNormalizedProgress()>0.1) {
+        faces[j].canDraw=true;
+      }
+    }
+    else{
+      if(!needToReachstart){
+        faces[j].timerappearance.start(false);
+      }
     }
   }
 }
