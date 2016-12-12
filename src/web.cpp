@@ -43,6 +43,16 @@ void web::update(){
         }
         else if ( webSamples[i].state_appeared == 0 && triangleDrawn >= triangulation.getNumTriangles()){
           meshcomplete = true;
+          //
+          // for (size_t i = 0; i < webSamples.size(); i++) {
+          //   for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
+          //     std::cout << " " <<webSamples[i].faces[j].timerappearance.getNormalizedProgress()<< '\n';
+          //     if(webSamples[i].faces.size()==0){
+          //       }
+          //     }
+          //   }
+       //Ismeshcomplete();
+
         }
       }
       webSamples[i].update();
@@ -57,14 +67,16 @@ void web::update(){
   }
 }
 void web::updateEnd(){
+
   int count=0;
+  int total=0;
   for (size_t i = 0; i < webSamples.size(); i++) {
       webSamples[i].updatefaces();
       if( webSamples[i].state_appeared == 0 &&triangleDrawn>=0){
         webSamples[i].addTriangle_appeared(triangles[triangleDrawn]);
         triangleDrawn--;
       }
-      else if ( webSamples[i].state_appeared == 0 && triangleDrawn < 0){
+      else if (webSamples[i].state_appeared == 0 && triangleDrawn < 0){
         ofMeshFace t;
         webSamples[i].addTriangle_appeared(t);
         webSamples[i].speed = 6;
@@ -72,13 +84,19 @@ void web::updateEnd(){
       }
 
       webSamples[i].update();
-      if (webSamples[i].end==false) {
-        count++;
-        end=true;
+      total++;
+      count++;
+      if (webSamples[i].end==false){
+        for (size_t j = 0; j < webSamples[i].faces.size() ; j++) {
+          total++;
+          if(webSamples[i].faces[i].timerappearance.getNormalizedProgress()<0.1){
+            count++;
+          }
+        }
       }
 
     }
-    if (count==webSamples.size()){
+    if (count>webSamples.size()&&count==total){
       std::cout << "please go" << '\n';
       end=false;
       waitPeopleToGo=true;
@@ -176,59 +194,13 @@ void web::draw_web(ofShader shader){
     sh.setUniform1f("timer", timerMeshDesappeare.getNormalizedProgress());
     RVB.bind();
     if(!waitPeopleToGo) {
-     if (meshcomplete) {
-        triangulation.triangleMesh.draw();
-        RVB.unbind();
-        sh.end();
-        shaderEnd.begin();
-        RVB.bind();
-        shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
-        shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-        for (size_t i = 0; i < webSamples.size(); i++) {
-          for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
-            if(meshDesappear){shaderEnd.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());}
-            else{shaderEnd.setUniform1f("timer", 1-timerMeshDesappeare.getNormalizedProgress());}
-            if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==1)){
-              webSamples[i].faces[j].lastFace.draw();
-            }
-          }
-        }
-        RVB.unbind();
-        shaderEnd.end();
-      }
-      else{
         for (size_t i = 0; i < webSamples.size(); i++) {
            webSamples[i].mesh.draw();
          }
          RVB.unbind();
          sh.end();
-         sh2.begin();
-         RVB.bind();
-         sh2.setUniform1f("u_time", ofGetElapsedTimef());
-         sh2.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-         for (size_t i = 0; i < webSamples.size(); i++) {
-           for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
-             sh2.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());
-             if(!meshDesappear){sh2.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());}
-             else{
-               if(webSamples[i].faces[j].timerappearance.getNormalizedProgress()>=0.1){
-                 sh2.setUniform1f("timer", 1-webSamples[i].faces[j].timerappearance.getNormalizedProgress()+timerMeshDesappeare.getNormalizedProgress());
-               }
-               else{
-                 sh2.setUniform1f("timer", timerMeshDesappeare.getNormalizedProgress());
-               }
-             }
-
-             if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==1)){
-               webSamples[i].faces[j].lastFace.draw();
-             }
-           }
-         }
-         RVB.unbind();
-         sh2.end();
-      }
     }
-
+    draw_fadetriangles();
     if (end) {
       sh.begin();
       base.bind();
@@ -237,26 +209,61 @@ void web::draw_web(ofShader shader){
       }
       base.unbind();
       sh.end();
-      shaderEnd.begin();
-      base.bind();
-      shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
-      shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-      for (size_t i = 0; i < webSamples.size(); i++) {
-        for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
-          shaderEnd.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());
-          if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==2)){
-            webSamples[i].faces[j].lastFace.draw();
-          }
-        }
-      }
-      base.unbind();
-      shaderEnd.end();
 
     }
 
     ofPopMatrix();
 }
 
+void web::draw_fadetriangles(){
+  ofShader sh2;
+  if(meshDesappear){
+      sh2 = Desappeare;
+  }
+  else{
+    sh2 = shaderEnd;
+  }
+   sh2.begin();
+   RVB.bind();
+   sh2.setUniform1f("u_time", ofGetElapsedTimef());
+   sh2.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+   for (size_t i = 0; i < webSamples.size(); i++) {
+     for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
+       if(!meshDesappear){
+         sh2.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());
+       }
+       else{
+         if(webSamples[i].faces[j].timerappearance.getNormalizedProgress()>=0.1){
+           sh2.setUniform1f("timer", 1-webSamples[i].faces[j].timerappearance.getNormalizedProgress()+timerMeshDesappeare.getNormalizedProgress());
+         }
+         else{
+           sh2.setUniform1f("timer", timerMeshDesappeare.getNormalizedProgress());
+         }
+       }
+       if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==1)){
+         webSamples[i].faces[j].lastFace.draw();
+       }
+     }
+   }
+   RVB.unbind();
+   sh2.end();
+   if(end){
+     shaderEnd.begin();
+     base.bind();
+     shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
+     shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+     for (size_t i = 0; i < webSamples.size(); i++) {
+       for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
+         shaderEnd.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());
+         if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==2)){
+           webSamples[i].faces[j].lastFace.draw();
+         }
+       }
+     }
+     base.unbind();
+     shaderEnd.end();
+   }
+  }
 void web::drawSusus(ofShader shader,float soundeffect){
   ofPushMatrix();
   ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);

@@ -8,7 +8,6 @@ void webSample::setup(){
   size =(rand()%3)+2;
   susuImg.load("dot.png");
   end = false;
-  timerappearance.setup(500);
 
 }
 
@@ -112,12 +111,6 @@ void webSample::addTriangle_appeared(ofMeshFace points){
     tostart_appeared = points.getVertex(0)-position;
   }
   if(!end){
-    // mesh.addVertex(currentTriangle_appeared.getVertex(0));
-    // mesh.addTexCoord(currentTriangle_appeared.getTexCoord(0));
-    // mesh.addVertex(currentTriangle_appeared.getVertex(1));
-    // mesh.addTexCoord(currentTriangle_appeared.getTexCoord(1));
-    // mesh.addVertex(currentTriangle_appeared.getVertex(2));
-    // mesh.addTexCoord(currentTriangle_appeared.getTexCoord(2));
     chekFaceCompleted();
     faceAppeare f;
     f.setup(4000,points,1);

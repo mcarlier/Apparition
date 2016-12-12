@@ -24,7 +24,6 @@ class webSample{
 		ofMesh meshEnd;
 		Boolean end;
 		ofMesh lastFace;
-		ofxSimpleTimer timerappearance;
 		vector<faceAppeare> faces;
 		void updatefaces();
 		void chekFaceCompleted();
