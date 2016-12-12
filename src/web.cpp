@@ -1,7 +1,6 @@
 #include "web.h"
-int essai = 0;
+//Main setup function
 void web::setup(){
-
   NumWebSample = 10;
   for (size_t i = 0; i < NumWebSample; i++) {
     webSample su;
@@ -9,12 +8,9 @@ void web::setup(){
     webSamples.push_back(su);
   }
   changeState(0);
-  //shaderWeb.load("shaders/desappeare2");
   shaderEnd.load("shaders/end");
-
   meshDesappear = false;
   Desappeare.load("shaders/desappeare");
-  shaderBegin.load("shaders/begin");
 
   RVB.load("img.jpg");
   createMesh();
@@ -23,12 +19,20 @@ void web::setup(){
   timerMeshDesappeare.setup(2000);
   end = false;
   waitPeopleToGo = false;
-
-
-
+}
+//Set up the end = when the mesh is complete
+void web::setupEnd(){
+  std::cout << "endSetup" << '\n';
+  end = true;
+  triangleDrawn=triangulation.getNumTriangles()-1;
+  for (size_t i = 0; i < webSamples.size(); i++) {
+    webSamples[i].end=true;
+    webSamples[i].speed=10;
+    webSamples[i].changeState(2);
+  }
 }
 
-//--------------------------------------------------------------
+//Main update fonction
 void web::update(){
   if(end==true){
     updateEnd();
@@ -43,16 +47,6 @@ void web::update(){
         }
         else if ( webSamples[i].state_appeared == 0 && triangleDrawn >= triangulation.getNumTriangles()){
           meshcomplete = true;
-          //
-          // for (size_t i = 0; i < webSamples.size(); i++) {
-          //   for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
-          //     std::cout << " " <<webSamples[i].faces[j].timerappearance.getNormalizedProgress()<< '\n';
-          //     if(webSamples[i].faces.size()==0){
-          //       }
-          //     }
-          //   }
-       //Ismeshcomplete();
-
         }
       }
       webSamples[i].update();
@@ -66,8 +60,8 @@ void web::update(){
     makeMeshDesappeare();
   }
 }
+// update fonction end =  when the mesh is complete
 void web::updateEnd(){
-
   int count=0;
   int total=0;
   for (size_t i = 0; i < webSamples.size(); i++) {
@@ -103,74 +97,26 @@ void web::updateEnd(){
       changeState(1);
     }
 }
+
+//main Draw function
 void web::draw(ofShader shader,float soundeffect){
     ofSetColor(ofColor(255,255,255,100));
     draw_web(shader);
     drawSusus(shader,soundeffect);
 }
-void web::changeState(int newState){
-  triangleDrawn = 0;
+//Draw the Susu =  white balls
+void web::drawSusus(ofShader shader,float soundeffect){
+  ofPushMatrix();
+  ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
+  ofScale(ofVec3f(0.8));
+  ofScale(ofVec3f(RVB.getHeight()/424));
+  ofRotate(180,1,0,0);
   for (size_t i = 0; i < webSamples.size(); i++) {
-    webSamples[i].changeState(newState);
-  }
-  if((state==2)&&!waitPeopleToGo){
-    std::cout << "disappear meash" << '\n';
-      meshDesappear = true;
-      timerMeshDesappeare.start(false);
-  }
-  state = newState;
-
-}
-
-void web::setupEnd(){
-  std::cout << "endSetup" << '\n';
-  end = true;
-  triangleDrawn=triangulation.getNumTriangles()-1;
-  for (size_t i = 0; i < webSamples.size(); i++) {
-    webSamples[i].end=true;
-    webSamples[i].speed=10;
-    webSamples[i].changeState(2);
-  }
-
-}
-
-void web::increaseSpeed(){
-  if (triangleDrawn>=triangulation.getNumTriangles()*5/6) {
-      for (size_t i = 0; i < webSamples.size(); i++) {
-        if (webSamples[i].speed<10) {
-            webSamples[i].speed+=0.01;
-        }
-    }
-  }
-
-}
-
-void web::startAnew(ofImage newImg){
-  for (size_t i = 0; i < webSamples.size(); i++) {
-      webSamples[i].clear();
-      changeState(0);
-      webSamples[i].meshEnd.clear();
-      webSamples[i].speed = 6;
-      webSamples[i].end = false;
-      meshDesappear = false;
-      RVB = newImg;
-      meshcomplete = false;
-      end = false;
-      waitPeopleToGo = false;
-  }
-}
-
-void web::makeMeshDesappeare(){
-   timerMeshDesappeare.update();
-   if(!timerMeshDesappeare.bIsRunning){
-     meshDesappear = false;
-     for (size_t i = 0; i < webSamples.size(); i++) {
-       webSamples[i].clear();
-       webSamples[i].faces.erase(webSamples[i].faces.begin(),webSamples[i].faces.begin()+webSamples[i].faces.size());
-     }
+     webSamples[i].drawSusu(shader,soundeffect);
    }
- }
-
+  ofPopMatrix();
+}
+//Draw the web = mesh
 void web::draw_web(ofShader shader){
     ofShader sh;
     ofShader sh2;
@@ -214,7 +160,7 @@ void web::draw_web(ofShader shader){
 
     ofPopMatrix();
 }
-
+//Draw the fade triangles, the part of the mesh that are fade in/out
 void web::draw_fadetriangles(){
   ofShader sh2;
   if(meshDesappear){
@@ -264,25 +210,21 @@ void web::draw_fadetriangles(){
      shaderEnd.end();
    }
   }
-void web::drawSusus(ofShader shader,float soundeffect){
-  ofPushMatrix();
-  ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
-  ofScale(ofVec3f(0.8));
-  ofScale(ofVec3f(RVB.getHeight()/424));
-  ofRotate(180,1,0,0);
+
+//Change the state of the web. 0 = rest,1 =someone detected 2 = drawing;
+void web::changeState(int newState){
+  triangleDrawn = 0;
   for (size_t i = 0; i < webSamples.size(); i++) {
-     webSamples[i].drawSusu(shader,soundeffect);
-   }
-  ofPopMatrix();
+    webSamples[i].changeState(newState);
+  }
+  if((state==2)&&!waitPeopleToGo){
+    std::cout << "disappear meash" << '\n';
+      meshDesappear = true;
+      timerMeshDesappeare.start(false);
+  }
+  state = newState;
 }
-
-//Define the sort for ordering the drawing of the triangles
-bool sortDescending(ofMeshFace i, ofMeshFace j)
-{
-    return (j.getVertex(0).y < i.getVertex(0).y);
-}
-
-//UPDATE : une seule boucle
+//Create the mesh that will be draw.
 void web::createMesh(){
   ofxDelaunay trtr;
   vector<ofMeshFace> teee;
@@ -308,8 +250,51 @@ void web::createMesh(){
   for (size_t i = 0; i < textcoord.size(); i++) {
     triangulation.triangleMesh.addTexCoord(textcoord[i]);
   }
-
   triangles = triangulation.triangleMesh.getUniqueFaces();
   ofSort(triangles,sortDescending); //order the triangles for the drawing
+}
+//Increase the speed of the susu when they draw the top of the mesh
+void web::increaseSpeed(){
+  if (triangleDrawn>=triangulation.getNumTriangles()*5/6) {
+      for (size_t i = 0; i < webSamples.size(); i++) {
+        if (webSamples[i].speed<10) {
+            webSamples[i].speed+=0.01;
+        }
+    }
+  }
 
+}
+//Check if the desappearance of the mesh is complete and then erase the datas.
+void web::makeMeshDesappeare(){
+   timerMeshDesappeare.update();
+   if(!timerMeshDesappeare.bIsRunning){
+     meshDesappear = false;
+     for (size_t i = 0; i < webSamples.size(); i++) {
+       webSamples[i].clear();
+       webSamples[i].faces.erase(webSamples[i].faces.begin(),webSamples[i].faces.begin()+webSamples[i].faces.size());
+     }
+   }
+ }
+
+//reinitialise all the datas fo the next user.
+void web::startAnew(ofImage newImg){
+  for (size_t i = 0; i < webSamples.size(); i++) {
+      webSamples[i].clear();
+      changeState(0);
+      webSamples[i].meshEnd.clear();
+      webSamples[i].speed = 6;
+      webSamples[i].end = false;
+      meshDesappear = false;
+      RVB = newImg;
+      meshcomplete = false;
+      end = false;
+      waitPeopleToGo = false;
+  }
+}
+
+
+//Define the sort for ordering the drawing of the triangles (used in createMesh())
+bool sortDescending(ofMeshFace i, ofMeshFace j)
+{
+    return (j.getVertex(0).y < i.getVertex(0).y);
 }

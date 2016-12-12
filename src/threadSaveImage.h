@@ -2,7 +2,7 @@
 #include "ofThread.h"
 #include "ofMain.h"
 
-
+//Thread to save an image
 class threadSaveImage: public ofThread
 {
 public:
@@ -15,7 +15,8 @@ public:
     void stop(){ stopThread(); }
 
     void threadedFunction()
-    { std::cout << "save "<<nameImg<< '\n';
+    {
+      std::cout << "save "<<nameImg<< '\n';
       //imageToSave.save(nameImg);
     };
 

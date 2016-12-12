@@ -9,47 +9,43 @@
 class web {
 	public:
 		void setup();
+		void setupEnd();
+
 		void update();
+		void updateEnd();
+
 		void draw(ofShader shader,float soundeffect);
 		void drawSusus(ofShader shader,float soundeffect);
 		void draw_web(ofShader shader);
 		void draw_fadetriangles();
+
 		void changeState(int newState); // 0 = rest,1 = detected 2 = drawing;
 		int state;
-		vector<webSample> webSamples;
-		int NumWebSample;
-		ofxDelaunay triangulation;
 
-		//Vbo dealing :
-		// ofVbo vboSusu;
-		vector <ofVec2f> pointsSusu;
-		// vector <ofVec3f> sizesSusu;
-		ofShader shaderSusu;
-		ofShader shaderWeb;
-		ofShader shaderBegin;
-
-		ofImage RVB;
 		void createMesh();
-		Boolean meshcomplete;
-
-		Boolean meshDesappear;
-		ofShader Desappeare;
-		void makeMeshDesappeare();
-		ofxSimpleTimer timerMeshDesappeare ;
-
-		Boolean end;
-		void updateEnd();
-		void setupEnd();
-		ofShader shaderEnd;
-		ofImage base;
-
 		void increaseSpeed();
+		void makeMeshDesappeare();
 		void startAnew(ofImage newImg);
 
-		Boolean waitPeopleToGo;
-
-		int triangleDrawn;
+		int NumWebSample;
+		vector<webSample> webSamples;
 		vector<ofMeshFace> triangles;
+		vector <ofVec2f> pointsSusu;
+		ofxDelaunay triangulation;
+		int triangleDrawn;
+
+		ofxSimpleTimer timerMeshDesappeare ;
+
+		Boolean waitPeopleToGo;
+		Boolean end;
+		Boolean meshDesappear;
+		Boolean meshcomplete;
+
+		ofShader shaderEnd;
+		ofShader Desappeare;
+
+		ofImage base;
+		ofImage RVB;
 
 };
 bool sortDescending(ofMeshFace i, ofMeshFace j);

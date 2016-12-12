@@ -1,5 +1,7 @@
 #include "webSample.h"
 int webSample::NumWebSample = 0;
+
+//Global setup
 void webSample::setup(){
   NumWebSample++;
   index = NumWebSample;
@@ -8,9 +10,9 @@ void webSample::setup(){
   size =(rand()%3)+2;
   susuImg.load("dot.png");
   end = false;
-
 }
 
+//Global update
 void webSample::update(){
   if(state==2){
     update_appeared();
@@ -23,7 +25,7 @@ void webSample::update(){
   }
 }
 
-//draw sphere around the webSample.
+//draw the susu texture around the webSample position.
 void  webSample::drawSusu(ofShader shader,float soundeffect){
   float a = 10*size + (soundeffect*1000)*5;
   shader.begin();
@@ -31,11 +33,7 @@ void  webSample::drawSusu(ofShader shader,float soundeffect){
   shader.end();
 }
 
-//Draw the web
-void webSample::drawWeb(){
-  ofSetColor(ofColor::black);
-  mesh.drawWireframe();
-}
+//Change the state of the susu
 void webSample::changeState(int newState){
   state = newState;
   if(state==0){
@@ -48,18 +46,25 @@ void webSample::changeState(int newState){
     setup_appeared();
   }
 }
-
+//Reinitialise all the datas on webSample
+void webSample::clear(){
+  mesh.clear();
+  ofMeshFace t;
+  currentTriangle_appeared = t;
+}
+//Check if a susu is next triangles it'll draw
+void webSample::reachStart(){
+  ofVec3f direction = start-position;
+  position +=direction.normalize()*speed;
+  if (ofDist(start.x,start.y,position.x,position.y)<2) {
+    needToReachstart = false;
+  }
+}
+//Set up the rest state
 void webSample::setup_rest(){
       needToReachstart = true;
 }
 
-void webSample::setup_detected(){
-    needToReachstart = true;
-}
-void webSample::setup_appeared(){
-  state_appeared = 0;
-  needToReachstart = true;
-}
 void webSample::update_rest(){
   if(!needToReachstart){
     position.x=ofMap( ofNoise( (ofGetElapsedTimef() +(index)) ), 0, 5, 0, -700)+305;
@@ -71,8 +76,11 @@ void webSample::update_rest(){
     reachStart();
   }
 }
-
-//detected
+//sate up the detected state
+void webSample::setup_detected(){
+    needToReachstart = true;
+}
+//Update position in detected state
 void webSample::update_detected(){
   if(!needToReachstart){
       position.x=ofMap(ofNoise( ofGetElapsedTimef() +(index) ), 0, 1, 0, -700)+570;
@@ -84,7 +92,12 @@ void webSample::update_detected(){
     reachStart();
   }
 }
-
+//set up the appearance state
+void webSample::setup_appeared(){
+  state_appeared = 0;
+  needToReachstart = true;
+}
+//update position in appearance state
 void webSample::update_appeared(){
   if(!needToReachstart){
     if(state_appeared!=0){
@@ -97,14 +110,23 @@ void webSample::update_appeared(){
     reachStart_appeared();
   }
 }
-void webSample::clear(){
-  mesh.clear();
-  ofMeshFace t;
-  currentTriangle_appeared = t;
+//Control the initialisation of a fade in/out triangles
+void webSample::updatefaces(){
+  for (int j = 0; j < faces.size(); j++) {
+    if (faces[j].timerappearance.bIsRunning) {
+      if (faces[j].timerappearance.getNormalizedProgress()>0.1) {
+        faces[j].canDraw=true;
+      }
+    }
+    else{
+      if(!needToReachstart){
+        faces[j].timerappearance.start(false);
+      }
+    }
+  }
 }
 
-
-//Add triangle to the mesh when the drawing is end_appeared
+//Add the next triangle that will be draw
 void webSample::addTriangle_appeared(ofMeshFace points){
   if(end_appeared.length()-points.getVertex(0).length()!=0){
     needToReachstart = true;
@@ -122,12 +144,10 @@ void webSample::addTriangle_appeared(ofMeshFace points){
     f.setup(1000,points,2);
     faces.push_back(f);
   }
-
-
   currentTriangle_appeared = points;
   changeStatus_appeared(1);
 }
-
+// Chek if the fade in/out triangles are finished then add them to the correct mesh
 void webSample::chekFaceCompleted(){
   for (int j = 0; j < faces.size(); j++) {
     if (faces[j].timerappearance.getNormalizedProgress()<=0) {
@@ -141,22 +161,7 @@ void webSample::chekFaceCompleted(){
     }
   }
 }
-
-void webSample::updatefaces(){
-  for (int j = 0; j < faces.size(); j++) {
-    if (faces[j].timerappearance.bIsRunning) {
-      if (faces[j].timerappearance.getNormalizedProgress()>0.1) {
-        faces[j].canDraw=true;
-      }
-    }
-    else{
-      if(!needToReachstart){
-        faces[j].timerappearance.start(false);
-      }
-    }
-  }
-}
-
+//change the status of the susu according of the progress across the triangle
 //0 change goal, 1 draw first edge, 2 draw 2nd edge, 3 draw third edge
 void webSample::changeStatus_appeared(int newStatus){
   if (newStatus==0){
@@ -192,13 +197,7 @@ void webSample::reachEnd_appeared(){
      changeStatus_appeared((state_appeared+1)%4);
    }
 }
-void webSample::reachStart(){
-  ofVec3f direction = start-position;
-  position +=direction.normalize()*speed;
-  if (ofDist(start.x,start.y,position.x,position.y)<2) {
-    needToReachstart = false;
-  }
-}
+
 // Test if the webSample reach her new start_appeared
 void webSample::reachStart_appeared(){
   ofVec3f PS;

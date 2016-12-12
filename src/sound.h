@@ -12,7 +12,7 @@ class sound {
 		void draw();
 
     ofSoundPlayer  sound;
-    float 				* fftSmoothed;
+    float * fftSmoothed;
     int nBandsToGet;
 		float avg;
 };

@@ -1,7 +1,7 @@
 #include "kinect.h"
 
+//Setup the kinect and wait for the first frame
 void kinect::setup(){
-
     //Uncomment for verbose info from libfreenect2
     //ofSetLogLevel(OF_LOG_VERBOSE);
     initialisationSucces = false;
@@ -23,12 +23,10 @@ void kinect::setup(){
     stateDetection = 0;
     changeState = 0;
     loadState = 0;
-    //shader.load("shaders/susu");
-
 }
 
-//--------------------------------------------------------------
 
+//Update the kinect and the detection
 void kinect::update(){
     if(initialisationSucces){
       timerSaveBase.update();
@@ -50,11 +48,31 @@ void kinect::update(){
     }
 }
 
-void kinect::saveImage(){
-  //ofSaveImage(texRGB, string path,OF_IMAGE_QUALITY_BEST);
-  threadSaveImage.start(texRGB,"img.jpg");//Update : No need
-
+//Draw the camera image
+void kinect::draw(ofShader shader){
+  if (texRGB.isAllocated()){
+    ofPushMatrix();
+    ofScale(ofVec3f(0.65));
+    ofTranslate(-texRGB.getWidth()/2,-texRGB.getHeight()/2,0);
+    shader.begin();
+    texRGB.draw(0,0);
+    shader.end();
+    ofPopMatrix();
+  }
 }
+
+//Check if the detection find something
+void kinect::updateState(){
+  if (lastStateDetection!=stateDetection) {
+    changeState = stateDetection;
+  }
+  else{
+    changeState = -2;
+  }
+  lastStateDetection = stateDetection;
+}
+
+//Load the current "data/img.jpg" in a different thread
 void kinect::loadNewImage(){
   if(loadState==0){
     threadLoadImage.start();
@@ -66,29 +84,10 @@ void kinect::loadNewImage(){
       threadLoadImage.stop();
       loadState=2;
     }
-
-
-  }
-}
-//--------------------------------------------------------------
-void kinect::draw(ofShader shader){
-  if (texRGB.isAllocated()){
-    ofPushMatrix();
-    ofScale(ofVec3f(0.65));
-    ofTranslate(-texRGB.getWidth()/2,-texRGB.getHeight()/2,0);
-     shader.begin();
-    texRGB.draw(0,0);
-    shader.end();
-    ofPopMatrix();
   }
 }
 
-void kinect::updateState(){
-  if (lastStateDetection!=stateDetection) {
-    changeState = stateDetection;
-  }
-  else{
-    changeState = -2;
-  }
-  lastStateDetection = stateDetection;
+//Save the current RGB image.
+void kinect::saveImage(){
+  threadSaveImage.start(texRGB,"img.jpg");
 }

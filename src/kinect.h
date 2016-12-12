@@ -12,28 +12,34 @@
 class kinect {
 
 	public:
+		ofxKinectV2 kinect;
+
 		void setup();
+		Boolean initialisationSucces;
+
 		void update();
 		void draw(ofShader shader);
 
-		Boolean initialisationSucces;
-		ofxKinectV2 kinect;
     ofImage texRGB;
 		ofImage base;
-    threadDetection threadDetection;
-		threadSaveImage threadSaveImage;
-		threadLoadImage threadLoadImage;
-		int loadState; //0needTolaunchThread,1 isLoading,2imageisReady;
-		ofImage imageLoaded;
-		void loadNewImage();
 
+    threadDetection threadDetection;
+		void updateState();
 		int stateDetection;
 		int lastStateDetection;
 		int changeState;
-		void updateState();
-		void saveImage();
-		//ofShader shader;
 
+
+		threadLoadImage threadLoadImage;
+		void loadNewImage();
+		int loadState; //0needTolaunchThread,1 isLoading,2imageisReady;
+		ofImage imageLoaded;
+
+
+
+		threadSaveImage threadSaveImage;
+		void saveImage();
 		ofxSimpleTimer timerSaveBase;
 		Boolean saveBase;
+
 };

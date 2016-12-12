@@ -61,9 +61,3 @@ void main() {
       outputColor = convergence()*vec4(1,1,1,1-timer);
     }
 }
-
-
-
-
-
-	//outputColor = texture(tex0, texCoordVarying)*vec4(color,1.0);

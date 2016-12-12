@@ -6,10 +6,11 @@
 
 class jsonManager {
 	public:
+		ofxJSONElement counterUser;
+
 		void setup();
+		void increment();
     int getInt();
     string getString();
-    void increment();
-
-    ofxJSONElement counterUser;
+    
 };

@@ -10,22 +10,37 @@
 #include "ofxGui.h"
 
 
-
-
-
-
-
 class ofApp : public ofBaseApp{
 	public:
 		void setup();
 		void update();
 		void draw();
 		void exit();
+		void startAnew();
 		void stateManager();
 		void peopleOutManager();
 
+
 		ofxSimpleTimer timerDetectionStill;
 		ofxSimpleTimer timerPeopleOut;
+
+		jsonManager counterUser;
+		ofEasyCam cam;
+		web web;
+		kinect kinect;
+		sound sound;
+		text text;
+		ofImage base;
+		ofShader shader;
+		Boolean imageSaved;
+		Boolean restart;
+
+
+		ofxPanel gui;
+		ofxFloatSlider radius;
+		ofxFloatSlider random_base;
+		ofxFloatSlider b;
+		ofxFloatSlider c;
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -38,25 +53,5 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-
-		jsonManager counterUser;
-		ofEasyCam cam;
-		web web;
-
-		ofImage base;
-		ofShader shader;
-		kinect kinect;
-		sound sound;
-		text text;
-		Boolean imageSaved;
-		Boolean restart;
-
-		void startAnew();
-		ofxPanel gui;
-		ofxFloatSlider radius;
-		ofxFloatSlider random_base;
-		ofxFloatSlider b;
-		ofxFloatSlider c;
-
 
 };

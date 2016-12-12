@@ -13,12 +13,10 @@ void ofApp::setup(){
 	restart = false;
 	counterUser.setup();
 	text.setup(counterUser.getString());
-
-
-	std::cout << counterUser.getInt() << '\n';
 	std::cout << counterUser.getString() << '\n';
 	counterUser.increment();
-	gui.setup(); // most of the time you don't need a name
+
+	gui.setup(); //Update : no need
 	gui.add(radius.setup("radius", 140, 10, 300));
 	gui.add(random_base.setup("random_base", 2, 0, 5));
 	gui.add(b.setup("b", 0.5, 0, 2));
@@ -36,14 +34,11 @@ void ofApp::update(){
 	else{
 		web.update();
 	}
-	ofSoundUpdate();
-
-	kinect.update();
 	sound.update();
+	kinect.update();
 	timerDetectionStill.update();
 	timerPeopleOut.update();
 	stateManager();
-
 	if (restart&&!timerPeopleOut.bIsRunning) {
 			startAnew();
 	}
@@ -52,14 +47,10 @@ void ofApp::update(){
 		counterUser.increment();
 		imageSaved=true;
 	}
-
-
 }
 
 //--------------------------------------------------------------
-
 void ofApp::draw(){
-
 	ofBackground(0,0,0);
 	cam.begin();
 	ofPushMatrix();
@@ -83,25 +74,21 @@ void ofApp::draw(){
 		kinect.draw(shader);
 	}
 	web.draw(shader,sound.avg);
-
-	//sound.draw();
-
 	cam.end();
 	//gui.draw();
 
 	//timerDetectionStill.draw( 15 , 15 ) ;
 	//timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
 	text.draw(web.waitPeopleToGo,web.end,web.state);
-
-
 }
 
+//Stop all te thread before quitting
 void ofApp::exit() {
     kinect.threadDetection.stopThread();
 		kinect.threadLoadImage.stopThread();
 		kinect.threadSaveImage.stopThread();
-
 }
+//Initialise the system for the next user.
 void ofApp::startAnew(){
 	std::cout << "startAnew" << '\n';
 	kinect.loadNewImage();
@@ -113,20 +100,7 @@ void ofApp::startAnew(){
 		text.update(counterUser.getString());
 	}
 }
-
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-	if(web.state == 0){
-		web.changeState(1);
-	}
-	else if(web.state == 1){
-		web.changeState(2);
-	}
-	else{
-		web.changeState(0);
-	}
-}
-
+//Make a link between the kinect movement detection and the web behavior 
 void ofApp::stateManager(){
 	if(!web.end){
 		if(!web.waitPeopleToGo){
@@ -160,6 +134,7 @@ void ofApp::stateManager(){
 		}
 	}
 }
+//manage timer that indicate that the user is out.
 void ofApp::peopleOutManager(){
 	if(kinect.changeState==0){
 		web.changeState(0);
@@ -167,61 +142,50 @@ void ofApp::peopleOutManager(){
 	}
 }
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-
+void ofApp::keyPressed(int key){
+	if(web.state == 0){
+		web.changeState(1);
+	}
+	else if(web.state == 1){
+		web.changeState(2);
+	}
+	else{
+		web.changeState(0);
+	}
 }
-
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key){
+}
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y){
-
 }
-
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
 }
-
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
 	 std::cout << "x = "<< x << '\n';
 	 std::cout << "y = "<<  y<< '\n';
-
 	 	//std::cout << "saveImage " << '\n';
 		//kinect.saveImage();
 	 	web.setupEnd();
 	 	//startAnew();
-
-
-
 }
-
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
 }
-
 //--------------------------------------------------------------
 void ofApp::mouseEntered(int x, int y){
-
 }
-
 //--------------------------------------------------------------
 void ofApp::mouseExited(int x, int y){
-
 }
-
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
 }
-
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
-
 }
-
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
-
 }

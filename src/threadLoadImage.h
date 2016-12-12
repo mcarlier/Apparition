@@ -2,7 +2,7 @@
 #include "ofThread.h"
 #include "ofMain.h"
 
-
+//Thread to load an image
 class threadLoadImage: public ofThread
 {
 public:

@@ -6,48 +6,36 @@
 
 class webSample{
 	public:
-		//webSample.cpp general funcions
+		static int NumWebSample;
+
+		void setup();
+		void update();
+		void drawSusu(ofShader shader,float sound);
+		void changeState(int newState);
+		void clear();
+
 		ofVec3f position;
 		float speed;
 		int size;
-		ofMesh mesh;
 		int index;
-		static int NumWebSample;
-		void setup();
-		void update();
-		void draw();
-		void changeState(int newState);
-		void clear();
 		int state;
 
-		//end
+		ofMesh mesh;
 		ofMesh meshEnd;
-		Boolean end;
 		ofMesh lastFace;
 		vector<faceAppeare> faces;
-		void updatefaces();
-		void chekFaceCompleted();
 
-
-
+		Boolean end;
+		Boolean needToReachstart;
 		ofImage susuImg;
 
-
-		void drawSusu(ofShader shader,float sound);
-		void drawWeb();
-
-		Boolean needToReachstart;
+		void reachStart();
 		ofVec3f start;
 		ofVec3f tostart;
-		void reachStart();
-
-
-
 
 		//rest
 		void setup_rest();
 		void update_rest();
-
 
 		//detected
 		void setup_detected();
@@ -56,15 +44,17 @@ class webSample{
 		//webSample_appeared apprearance functions
 		void setup_appeared();
 		void update_appeared();
+		void updatefaces();
+		void addTriangle_appeared(ofMeshFace points);
+		void chekFaceCompleted();
+		void changeStatus_appeared(int newStatus);
 		int state_appeared; //0 change goal, 1 draw first edge, 2 draw 2nd edge, 3 draw third edge
+		void reachEnd_appeared();
+		void reachStart_appeared();
 		ofMeshFace currentTriangle_appeared;
 		ofVec3f start_appeared;
 		ofVec3f end_appeared;
 		ofVec3f direction_appeared;
 		ofVec3f tostart_appeared;
 
-		void changeStatus_appeared(int newStatus);
-		void reachEnd_appeared();
-		void reachStart_appeared();
-		void addTriangle_appeared(ofMeshFace points);
 };
