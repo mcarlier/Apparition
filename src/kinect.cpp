@@ -79,8 +79,9 @@ void kinect::loadNewImage(){
     loadState=1;
   }
   else if(loadState==1){
-      if (threadLoadImage.imageLoaded.isAllocated()) {
+      if (threadLoadImage.imageReady){
       imageLoaded = threadLoadImage.imageLoaded;
+      threadLoadImage.imageReady = false;
       threadLoadImage.stop();
       loadState=2;
     }

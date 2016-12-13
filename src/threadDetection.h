@@ -14,7 +14,7 @@ public:
     ofPixels  currentDepthImage;
     ofPixels  lastDepthImage;
     int avg0;
-    int SomeoneDetected;//0 = no detection/ 1 = right / 2 = left;
+    int SomeoneDetected;//0 = no detection/ 1 = someone
     Boolean move;
 
     int MotionDetectionPrecision = 800;

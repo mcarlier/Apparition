@@ -78,7 +78,7 @@ void ofApp::draw(){
 	//gui.draw();
 
 	//timerDetectionStill.draw( 15 , 15 ) ;
-	//timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
+	timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
 	text.draw(web.waitPeopleToGo,web.end,web.state);
 }
 
@@ -100,7 +100,7 @@ void ofApp::startAnew(){
 		text.update(counterUser.getString());
 	}
 }
-//Make a link between the kinect movement detection and the web behavior 
+//Make a link between the kinect movement detection and the web behavior
 void ofApp::stateManager(){
 	if(!web.end){
 		if(!web.waitPeopleToGo){
@@ -123,6 +123,13 @@ void ofApp::stateManager(){
 			}
 		}
 		else{
+			if(!web.setupWaitPeopleToGo){
+				if(kinect.stateDetection==0){
+					timerPeopleOut.start(false);
+					restart=true;
+				}
+				web.setupWaitPeopleToGo=true;
+			}
 			if(kinect.changeState==0){
 				timerPeopleOut.start(false);
 				restart=true;
@@ -168,8 +175,8 @@ void ofApp::mousePressed(int x, int y, int button){
 	 std::cout << "y = "<<  y<< '\n';
 	 	//std::cout << "saveImage " << '\n';
 		//kinect.saveImage();
-	 	web.setupEnd();
-	 	//startAnew();
+	 	//web.setupEnd();
+	 	startAnew();
 }
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){

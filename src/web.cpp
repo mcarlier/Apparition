@@ -19,6 +19,7 @@ void web::setup(){
   timerMeshDesappeare.setup(2000);
   end = false;
   waitPeopleToGo = false;
+  setupWaitPeopleToGo =false;
 }
 //Set up the end = when the mesh is complete
 void web::setupEnd(){
@@ -289,6 +290,7 @@ void web::startAnew(ofImage newImg){
       meshcomplete = false;
       end = false;
       waitPeopleToGo = false;
+      setupWaitPeopleToGo = false;
   }
 }
 

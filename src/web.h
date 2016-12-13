@@ -37,6 +37,7 @@ class web {
 		ofxSimpleTimer timerMeshDesappeare ;
 
 		Boolean waitPeopleToGo;
+		Boolean setupWaitPeopleToGo;
 		Boolean end;
 		Boolean meshDesappear;
 		Boolean meshcomplete;

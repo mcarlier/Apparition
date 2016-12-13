@@ -25,7 +25,7 @@ class kinect {
 
     threadDetection threadDetection;
 		void updateState();
-		int stateDetection;
+		int stateDetection;////0 = no detection/ 1 = someone //-1 someone moving
 		int lastStateDetection;
 		int changeState;
 

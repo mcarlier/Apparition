@@ -7,7 +7,7 @@ class threadLoadImage: public ofThread
 {
 public:
     void start(){
-      imagePicktedUP = false;
+      imageReady = false;
       startThread();
     }
     void stop(){ stopThread(); }
@@ -15,13 +15,12 @@ public:
     void threadedFunction()
     {
       ofLoadImage(imageLoaded, "img.jpg");
-      if (imageLoaded.isAllocated()) {
-      }
-      while (!imagePicktedUP) {
-
-      }
+      imageReady = true;
+      // while (imageReady) {
+      //
+      // }
     };
 
     ofPixels imageLoaded;
-    Boolean imagePicktedUP;
+    Boolean imageReady;
 };

@@ -51,6 +51,7 @@ void webSample::clear(){
   mesh.clear();
   ofMeshFace t;
   currentTriangle_appeared = t;
+  faces.clear();
 }
 //Check if a susu is next triangles it'll draw
 void webSample::reachStart(){
