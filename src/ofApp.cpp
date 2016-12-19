@@ -78,7 +78,7 @@ void ofApp::draw(){
 	//gui.draw();
 
 	//timerDetectionStill.draw( 15 , 15 ) ;
-	timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
+	//timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
 	text.draw(web.waitPeopleToGo,web.end,web.state);
 }
 
@@ -91,14 +91,14 @@ void ofApp::exit() {
 //Initialise the system for the next user.
 void ofApp::startAnew(){
 	std::cout << "startAnew" << '\n';
-	kinect.loadNewImage();
-	if(kinect.loadState==2){
+	// kinect.loadNewImage();
+	// if(kinect.loadState==2){
 		web.startAnew(kinect.imageLoaded);
 		imageSaved = false;
 		kinect.loadState = 0;
 		restart=false;
 		text.update(counterUser.getString());
-	}
+	// }
 }
 //Make a link between the kinect movement detection and the web behavior
 void ofApp::stateManager(){
@@ -175,8 +175,8 @@ void ofApp::mousePressed(int x, int y, int button){
 	 std::cout << "y = "<<  y<< '\n';
 	 	//std::cout << "saveImage " << '\n';
 		//kinect.saveImage();
-	 	//web.setupEnd();
-	 	startAnew();
+	 	web.setupEnd();
+	 	//startAnew();
 }
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){

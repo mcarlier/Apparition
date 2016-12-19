@@ -35,14 +35,36 @@ float noise (in vec2 _st) {
 
 
 
+vec2 deformation(){
+  vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
+  vec4 col = texture(tex0,texCoordVarying);
+  float rand1 = random(vec2(u_time));
+
+
+  vec2 result=vec2(1);
+// Assign a random value based on the integer coord
+  if(mod(floor(u_time),20)==0){
+    vec2 st1 = st*10.; // Scale the coordinate system by 10
+    vec2 ipos = floor(st1);  // get the integer coords
+    result += vec2(50*fract(sin(ipos.y +sin(u_time)*1.0)),0);
+  }
+  else if(mod(floor(u_time),35)==0){
+    vec2 st2 = st*random(st +sin(u_time)); // Scale the coordinate system by 10
+    vec2 ipos = floor(st2);  // get the integer coords
+    result+= vec2(50*fract(sin(ipos.y +sin(u_time)*1.0)),0);
+  }
+  return result;
+
+}
 vec4 convergence() {
   vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
+   vec2 deformationG = deformation();
 
-  vec4 col = texture(tex0,texCoordVarying);
+  vec4 col = texture(tex0,texCoordVarying+ deformationG);
   int a = int(u_time/4);
-  vec4 col_r = texture(tex0,texCoordVarying + vec2(-35.0*random(vec2(u_time))*u_time,0));
-  vec4 col_l = texture(tex0,texCoordVarying + vec2( 35.0*random(vec2(a)),0));
-  vec4 col_g = texture(tex0,texCoordVarying + vec2( -70.5*random(vec2(a)),0));
+  vec4 col_r = texture(tex0,texCoordVarying+deformationG+ vec2(-35.0*random(vec2(u_time))*u_time,0));
+  vec4 col_l = texture(tex0,texCoordVarying+deformationG+ vec2( 35.0*random(vec2(a)),0));
+  vec4 col_g = texture(tex0,texCoordVarying+deformationG+ vec2( -70.5*random(vec2(a)),0));
 
 
   col.b = col.b + col_r.b*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));

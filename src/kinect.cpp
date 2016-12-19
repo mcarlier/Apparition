@@ -43,7 +43,7 @@ void kinect::update(){
       if (!timerSaveBase.bIsRunning&&!saveBase) {
         saveBase=true;
         base = kinect.getRgbPixels();
-        threadSaveImage.start(base,"emptyRoom.jpg");//Update : No need
+        //threadSaveImage.start(base,"emptyRoom.jpg");//Update : No need
       }
     }
 }
@@ -91,4 +91,5 @@ void kinect::loadNewImage(){
 //Save the current RGB image.
 void kinect::saveImage(){
   threadSaveImage.start(texRGB,"img.jpg");
+  imageLoaded = texRGB;
 }
