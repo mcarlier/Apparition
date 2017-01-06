@@ -7,8 +7,8 @@ void ofApp::setup(){
 	web.setup();
 	shader.load("shaders/glitch");
 	sound.setup();
-	timerDetectionStill.setup(2000);
-	timerPeopleOut.setup(5000);
+	timerDetectionStill.setup(5000); //How much time the person stay still before draw
+	timerPeopleOut.setup(10000);//How much time noone before restart
 	imageSaved = false;
 	restart = false;
 	counterUser.setup();
@@ -47,6 +47,7 @@ void ofApp::update(){
 		counterUser.increment();
 		imageSaved=true;
 	}
+	currentTime = ofGetElapsedTimef();
 }
 
 //--------------------------------------------------------------
@@ -57,13 +58,8 @@ void ofApp::draw(){
 	ofScale(ofVec3f(0.65));
 	ofTranslate(-base.getWidth()/2,-base.getHeight()/2,0);
 	shader.begin();
-	shader.setUniform1f("u_time", ofGetElapsedTimef());
-	//std::cout <<ofGetElapsedTimef() << '\n';
+	shader.setUniform1f("u_time", currentTime);
 	shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-	shader.setUniform1f("radius", radius);
-	shader.setUniform1f("random_base", random_base);
-	shader.setUniform1f("b", b);
-	shader.setUniform1f("c", c);
 
 	if (base.isAllocated()) {
 		base.draw(0,0);
@@ -71,9 +67,9 @@ void ofApp::draw(){
 	shader.end();
 	ofPopMatrix();
 	if((!web.end)&&(!web.waitPeopleToGo)){
-		kinect.draw(shader);
+		kinect.draw(shader,currentTime);
 	}
-	web.draw(shader,sound.avg);
+	web.draw(shader,sound.avg,currentTime);
 	cam.end();
 	//gui.draw();
 

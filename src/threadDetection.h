@@ -17,7 +17,7 @@ public:
     int SomeoneDetected;//0 = no detection/ 1 = someone
     Boolean move;
 
-    int MotionDetectionPrecision = 800;
+    int MotionDetectionPrecision = 770;
     int PresenceDetectionPrecision = 200;
 
     void draw(){};

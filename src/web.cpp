@@ -16,7 +16,7 @@ void web::setup(){
   createMesh();
   meshcomplete = false;
 
-  timerMeshDesappeare.setup(2000);
+  timerMeshDesappeare.setup(4000);//Time mesh desappeare (movement)
   end = false;
   waitPeopleToGo = false;
   setupWaitPeopleToGo =false;
@@ -28,7 +28,7 @@ void web::setupEnd(){
   triangleDrawn=triangulation.getNumTriangles()-1;
   for (size_t i = 0; i < webSamples.size(); i++) {
     webSamples[i].end=true;
-    webSamples[i].speed=10;
+    webSamples[i].speed=webSamples[i].speedEnd;
     webSamples[i].changeState(2);
   }
 }
@@ -74,7 +74,8 @@ void web::updateEnd(){
       else if (webSamples[i].state_appeared == 0 && triangleDrawn < 0){
         ofMeshFace t;
         webSamples[i].addTriangle_appeared(t);
-        webSamples[i].speed = 6;
+        webSamples[i].speed = webSamples[i].speedApparition;
+        webSamples[i].changeState(1);
         webSamples[i].end = false;
       }
 
@@ -100,25 +101,25 @@ void web::updateEnd(){
 }
 
 //main Draw function
-void web::draw(ofShader shader,float soundeffect){
+void web::draw(ofShader shader,float soundeffect,float currentTime){
     ofSetColor(ofColor(255,255,255,100));
-    draw_web(shader);
-    drawSusus(shader,soundeffect);
+    draw_web(shader,currentTime);
+    drawSusus(shader,soundeffect,currentTime);
 }
 //Draw the Susu =  white balls
-void web::drawSusus(ofShader shader,float soundeffect){
+void web::drawSusus(ofShader shader,float soundeffect,float currentTime){
   ofPushMatrix();
   ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
   ofScale(ofVec3f(0.8));
   ofScale(ofVec3f(RVB.getHeight()/424));
   ofRotate(180,1,0,0);
   for (size_t i = 0; i < webSamples.size(); i++) {
-     webSamples[i].drawSusu(shader,soundeffect);
+     webSamples[i].drawSusu(shader,soundeffect,currentTime);
    }
   ofPopMatrix();
 }
 //Draw the web = mesh
-void web::draw_web(ofShader shader){
+void web::draw_web(ofShader shader,float currentTime){
     ofShader sh;
     ofShader sh2;
     if(meshDesappear){
@@ -136,7 +137,7 @@ void web::draw_web(ofShader shader){
     ofRotate(180,1,0,0);
     ofSetColor(ofColor::white);
     sh.begin();
-    sh.setUniform1f("u_time", ofGetElapsedTimef());
+    sh.setUniform1f("u_time", currentTime);
     sh.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     sh.setUniform1f("timer", timerMeshDesappeare.getNormalizedProgress());
     RVB.bind();
@@ -147,7 +148,7 @@ void web::draw_web(ofShader shader){
          RVB.unbind();
          sh.end();
     }
-    draw_fadetriangles();
+    draw_fadetriangles(currentTime);
     if (end) {
       sh.begin();
       base.bind();
@@ -162,7 +163,7 @@ void web::draw_web(ofShader shader){
     ofPopMatrix();
 }
 //Draw the fade triangles, the part of the mesh that are fade in/out
-void web::draw_fadetriangles(){
+void web::draw_fadetriangles(float currentTime){
   ofShader sh2;
   if(meshDesappear){
       sh2 = Desappeare;
@@ -172,7 +173,7 @@ void web::draw_fadetriangles(){
   }
    sh2.begin();
    RVB.bind();
-   sh2.setUniform1f("u_time", ofGetElapsedTimef());
+   sh2.setUniform1f("u_time", currentTime);
    sh2.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
    for (size_t i = 0; i < webSamples.size(); i++) {
      for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
@@ -197,7 +198,7 @@ void web::draw_fadetriangles(){
    if(end){
      shaderEnd.begin();
      base.bind();
-     shaderEnd.setUniform1f("u_time", ofGetElapsedTimef());
+     shaderEnd.setUniform1f("u_time", currentTime);
      shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
      for (size_t i = 0; i < webSamples.size(); i++) {
        for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
@@ -258,7 +259,7 @@ void web::createMesh(){
 void web::increaseSpeed(){
   if (triangleDrawn>=triangulation.getNumTriangles()*5/6) {
       for (size_t i = 0; i < webSamples.size(); i++) {
-        if (webSamples[i].speed<10) {
+        if (webSamples[i].speed<webSamples[i].speedEnd) {
             webSamples[i].speed+=0.01;
         }
     }
@@ -283,7 +284,7 @@ void web::startAnew(ofImage newImg){
       webSamples[i].clear();
       changeState(0);
       webSamples[i].meshEnd.clear();
-      webSamples[i].speed = 6;
+      webSamples[i].speed = webSamples[i].speedApparition;;
       webSamples[i].end = false;
       meshDesappear = false;
       RVB = newImg;

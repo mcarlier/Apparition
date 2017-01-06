@@ -18,7 +18,7 @@ class kinect {
 		Boolean initialisationSucces;
 
 		void update();
-		void draw(ofShader shader);
+		void draw(ofShader shader,float currentTime);
 
     ofImage texRGB;
 		ofImage base;

@@ -1,12 +1,19 @@
 #include "webSample.h"
 int webSample::NumWebSample = 0;
+float webSample::speedApparition = 2.5;
+float webSample::speedEnd = 6;
+int webSample::speedFadeIn = 7000; //vitesse apparition
+int webSample::speedFadeOut = 5000;//vitesse disparition (fin)
+
+
 
 //Global setup
 void webSample::setup(){
   NumWebSample++;
   index = NumWebSample;
   position = ofVec3f(0);
-  speed = 6;
+
+  speed = speedApparition;
   size =(rand()%3)+2;
   susuImg.load("dot.png");
   end = false;
@@ -26,7 +33,7 @@ void webSample::update(){
 }
 
 //draw the susu texture around the webSample position.
-void  webSample::drawSusu(ofShader shader,float soundeffect){
+void  webSample::drawSusu(ofShader shader,float soundeffect,float currentTime){
   float a = 10*size + (soundeffect*1000)*5;
   shader.begin();
   susuImg.draw(position.x-(a/2),position.y-(a/2),a,a);
@@ -136,13 +143,13 @@ void webSample::addTriangle_appeared(ofMeshFace points){
   if(!end){
     chekFaceCompleted();
     faceAppeare f;
-    f.setup(4000,points,1);
+    f.setup(speedFadeIn,points,1);
     faces.push_back(f);
   }
   else{
     chekFaceCompleted();
     faceAppeare f;
-    f.setup(1000,points,2);
+    f.setup(speedFadeOut,points,2);
     faces.push_back(f);
   }
   currentTriangle_appeared = points;

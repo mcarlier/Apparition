@@ -49,12 +49,14 @@ void kinect::update(){
 }
 
 //Draw the camera image
-void kinect::draw(ofShader shader){
+void kinect::draw(ofShader shader,float currentTime){
   if (texRGB.isAllocated()){
     ofPushMatrix();
     ofScale(ofVec3f(0.65));
     ofTranslate(-texRGB.getWidth()/2,-texRGB.getHeight()/2,0);
     shader.begin();
+    shader.setUniform1f("u_time", currentTime);
+    shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     texRGB.draw(0,0);
     shader.end();
     ofPopMatrix();

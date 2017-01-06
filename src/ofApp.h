@@ -23,6 +23,7 @@ class ofApp : public ofBaseApp{
 
 		ofxSimpleTimer timerDetectionStill;
 		ofxSimpleTimer timerPeopleOut;
+		float currentTime;
 
 		jsonManager counterUser;
 		ofEasyCam cam;

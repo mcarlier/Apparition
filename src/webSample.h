@@ -7,10 +7,14 @@
 class webSample{
 	public:
 		static int NumWebSample;
+		static float speedApparition;
+		static float speedEnd;
+		static int speedFadeIn;
+		static int speedFadeOut;
 
 		void setup();
 		void update();
-		void drawSusu(ofShader shader,float sound);
+		void drawSusu(ofShader shader,float sound,float currentTime);
 		void changeState(int newState);
 		void clear();
 
