@@ -8,13 +8,13 @@
 
 class web {
 	public:
-		void setup();
+		void setup(string lastuserID);
 		void setupEnd();
 
 		void update();
 		void updateEnd();
 
-		void draw(ofShader shader,float soundeffect,float currentTime);
+		void draw(ofShader shader,ofShader shaderweb,float soundeffect,float currentTime);
 		void drawSusus(ofShader shader,float soundeffect,float currentTime);
 		void draw_web(ofShader shader,float currentTime);
 		void draw_fadetriangles(float currentTime);
@@ -47,6 +47,12 @@ class web {
 
 		ofImage base;
 		ofImage RVB;
+
+		ofxPanel gui;
+		ofxFloatSlider a;
+		ofxFloatSlider d;
+		ofxFloatSlider b;
+		ofxFloatSlider c;
 
 };
 bool sortDescending(ofMeshFace i, ofMeshFace j);

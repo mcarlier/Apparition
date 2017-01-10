@@ -4,7 +4,15 @@
 uniform sampler2DRect tex0;
 uniform vec2 u_resolution;
 uniform float u_time;
-uniform float timer;
+uniform float a;
+uniform float b;
+uniform float c;
+uniform float d;
+
+
+
+
+
 in vec2 texCoordVarying;
 out vec4 outputColor;
 
@@ -34,12 +42,26 @@ float noise (in vec2 _st) {
 }
 
 
-
 vec2 deformation(){
   vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
+  // float x = gl_FragCoord.x/u_resolution.x*3.;
+  // float y = gl_FragCoord.y/u_resolution.y*3.;
+  // float amplitude = 1.;
+  // float frequency = 1.;
+  // y = sin(x * frequency);
+  // float t = 0.01*(-u_time*130.0);
+  // y += sin(x*frequency*2.1 + t)*4.5;
+  // y += sin(x*frequency*1.72 + t*1.121)*4.0;
+  // y += sin(x*frequency*2.221 + t*0.437)*5.0;
+  // y += sin(x*frequency*3.1122+ t*4.269)*2.5;
+  // y *= amplitude*0.06;
+  // // gl_FragCoord.y = y;
+  // return vec2(5*y,10*y);
+
   vec4 col = texture(tex0,texCoordVarying);
   float rand1 = random(vec2(u_time));
-
+  // vec4 col_s = texture(tex0,texCoordVarying + 100*vec2(floor(sin(st.y/30.0*rand1+rand1*rand1))*30.0*rand1,0));
+  // col = col_s;
 
   vec2 result=vec2(1);
 // Assign a random value based on the integer coord
@@ -56,7 +78,7 @@ vec2 deformation(){
   return result;
 
 }
-vec4 convergence() {
+vec4 convergence(){
   vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
    vec2 deformationG = deformation();
 
@@ -74,24 +96,20 @@ vec4 convergence() {
   return col;
 }
 
-void main() {
-  vec2 st = gl_FragCoord.xy/u_resolution.xy;
-  float y =smoothstep(0.325,0.39,st.x) - smoothstep(0.73,0.785,st.x);
-  vec4 col;
-  if((timer>=0)&&(timer<0.1)){
-    col = convergence();
-  }
-  else if((timer<0.98)&&(timer>0)){
-    col = convergence()*vec4(1,1,1,1-timer);
-  }
-  col.a *= y;
-  outputColor = col;
 
-    // vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
-    // if((timer>=0)&&(timer<0.1)){
-    //   outputColor = convergence();
-    // }
-    // else if((timer<0.98)&&(timer>0)){
-    //   outputColor = convergence()*vec4(1,1,1,1-timer);
-    // }
+
+void main() {
+
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    float y =smoothstep(0.325,0.39,st.x) - smoothstep(0.73,0.785,st.x);
+    vec4 col = convergence();
+    col.a *= y;
+	  outputColor = col;
+
+    //outputColor = texture(tex0,texCoordVarying +vec2(10*y,10*y));
+
+
+    //outputColor = texture(tex0, texCoordVarying)*vec4(1,1,sin(u_time),1);//-vec4((f*f*f+.6*f*f+.5*f)*color,color.x));
 }
+
+	//outputColor = texture(tex0, texCoordVarying)*vec4(color,1.0);

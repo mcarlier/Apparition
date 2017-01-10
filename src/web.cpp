@@ -1,6 +1,6 @@
 #include "web.h"
 //Main setup function
-void web::setup(){
+void web::setup(string lastuserID){
   NumWebSample = 10;
   for (size_t i = 0; i < NumWebSample; i++) {
     webSample su;
@@ -12,7 +12,7 @@ void web::setup(){
   meshDesappear = false;
   Desappeare.load("shaders/desappeare");
 
-  RVB.load("img.jpg");
+  RVB.load("img"+lastuserID+".jpg");
   createMesh();
   meshcomplete = false;
 
@@ -20,6 +20,13 @@ void web::setup(){
   end = false;
   waitPeopleToGo = false;
   setupWaitPeopleToGo =false;
+  gui.setup(); //Update : no need
+  gui.add(a.setup("a", 0.2, 0, 1));
+  gui.add(b.setup("b", 0.5, 0, 1));
+  gui.add(c.setup("c", 0.5, 0, 1));
+  gui.add(d.setup("d", 0.8, 0, 1));
+
+
 }
 //Set up the end = when the mesh is complete
 void web::setupEnd(){
@@ -101,9 +108,9 @@ void web::updateEnd(){
 }
 
 //main Draw function
-void web::draw(ofShader shader,float soundeffect,float currentTime){
+void web::draw(ofShader shader,ofShader shaderweb,float soundeffect,float currentTime){
     ofSetColor(ofColor(255,255,255,100));
-    draw_web(shader,currentTime);
+    draw_web(shaderweb,currentTime);
     drawSusus(shader,soundeffect,currentTime);
 }
 //Draw the Susu =  white balls
@@ -140,6 +147,10 @@ void web::draw_web(ofShader shader,float currentTime){
     sh.setUniform1f("u_time", currentTime);
     sh.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     sh.setUniform1f("timer", timerMeshDesappeare.getNormalizedProgress());
+    sh.setUniform1f("a", a);
+    sh.setUniform1f("b", b);
+    sh.setUniform1f("c", c);
+    sh.setUniform1f("d", d);
     RVB.bind();
     if(!waitPeopleToGo) {
         for (size_t i = 0; i < webSamples.size(); i++) {
@@ -161,6 +172,7 @@ void web::draw_web(ofShader shader,float currentTime){
     }
 
     ofPopMatrix();
+
 }
 //Draw the fade triangles, the part of the mesh that are fade in/out
 void web::draw_fadetriangles(float currentTime){

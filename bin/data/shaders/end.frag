@@ -74,11 +74,23 @@ vec4 convergence() {
 }
 
 void main() {
-    vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
-    if((timer<0.98)&&(timer>0)){
-      outputColor = convergence()*vec4(1,1,1,timer);
-    }
-    else{
-      outputColor=convergence();
-    }
+  vec2 st = gl_FragCoord.xy/u_resolution.xy;
+  float y =smoothstep(0.325,0.39,st.x) - smoothstep(0.73,0.785,st.x);
+  vec4 col;
+  if((timer<0.98)&&(timer>0)){
+    col = convergence()*vec4(1,1,1,timer);
+  }
+  else{
+    col=convergence();
+  }
+  col.a *= y;
+  outputColor = col;
+
+    // vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
+    // if((timer<0.98)&&(timer>0)){
+    //   outputColor = convergence()*vec4(1,1,1,timer);
+    // }
+    // else{
+    //   outputColor=convergence();
+    // }
 }

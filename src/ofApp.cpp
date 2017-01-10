@@ -4,8 +4,8 @@
 void ofApp::setup(){
 	//ofSetVerticalSync(true);
 	kinect.setup();
-	web.setup();
 	shader.load("shaders/glitch");
+	shaderweb.load("shaders/glitch_web");
 	sound.setup();
 	timerDetectionStill.setup(5000); //How much time the person stay still before draw
 	timerPeopleOut.setup(10000);//How much time noone before restart
@@ -13,8 +13,10 @@ void ofApp::setup(){
 	restart = false;
 	counterUser.setup();
 	text.setup(counterUser.getString());
+	int lastuserID = (counterUser.getInt()-1)%5;
+	web.setup(to_string(lastuserID));
+
 	std::cout << counterUser.getString() << '\n';
-	counterUser.increment();
 
 	gui.setup(); //Update : no need
 	gui.add(radius.setup("radius", 140, 10, 300));
@@ -43,7 +45,7 @@ void ofApp::update(){
 			startAnew();
 	}
 	if ((web.state==2)&&(imageSaved==false)&&(web.triangleDrawn>=web.triangulation.getNumTriangles()/2)) {
-		kinect.saveImage();
+		kinect.saveImage(counterUser.getInt());
 		counterUser.increment();
 		imageSaved=true;
 	}
@@ -69,9 +71,9 @@ void ofApp::draw(){
 	if((!web.end)&&(!web.waitPeopleToGo)){
 		kinect.draw(shader,currentTime);
 	}
-	web.draw(shader,sound.avg,currentTime);
+	web.draw(shader,shaderweb,sound.avg,currentTime);
 	cam.end();
-	//gui.draw();
+  //web.gui.draw();
 
 	//timerDetectionStill.draw( 15 , 15 ) ;
 	//timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
@@ -171,7 +173,7 @@ void ofApp::mousePressed(int x, int y, int button){
 	 std::cout << "y = "<<  y<< '\n';
 	 	//std::cout << "saveImage " << '\n';
 		//kinect.saveImage();
-	 	web.setupEnd();
+	 	//web.setupEnd();
 	 	//startAnew();
 }
 //--------------------------------------------------------------

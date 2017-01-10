@@ -38,7 +38,7 @@ class kinect {
 
 
 		threadSaveImage threadSaveImage;
-		void saveImage();
+		void saveImage(int userNumber);
 		ofxSimpleTimer timerSaveBase;
 		Boolean saveBase;
 

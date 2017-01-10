@@ -33,6 +33,7 @@ class ofApp : public ofBaseApp{
 		text text;
 		ofImage base;
 		ofShader shader;
+		ofShader shaderweb;
 		Boolean imageSaved;
 		Boolean restart;
 

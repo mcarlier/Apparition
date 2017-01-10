@@ -91,7 +91,9 @@ void kinect::loadNewImage(){
 }
 
 //Save the current RGB image.
-void kinect::saveImage(){
-  threadSaveImage.start(texRGB,"img.jpg");
+void kinect::saveImage(int userNumber){
+  int num = userNumber%5;
+  std::cout << "num = "<<num << '\n';
+  threadSaveImage.start(texRGB,"img"+to_string(num)+".jpg");
   imageLoaded = texRGB;
 }
