@@ -10,12 +10,14 @@ class text {
 		void setup(string count);
 		void update(string count);
 		void draw(Boolean waitToGo, Boolean end, int statSusu);
+		string getParticle();
 
     ofTrueTypeFont myfont;
 		ofImage pleasesitJPN;
 		ofImage youwereJPN;
 		ofImage userJPN;
 		ofImage participationJPN;
+		ofImage bonTravailJPN;
 
 		string user;
 		int numberOfUser;

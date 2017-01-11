@@ -29,27 +29,27 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	if (!base.isAllocated()) {
-		base = kinect.base;
-		web.base = base;
-	}
-	else{
-		web.update();
-	}
-	sound.update();
-	kinect.update();
-	timerDetectionStill.update();
-	timerPeopleOut.update();
-	stateManager();
-	if (restart&&!timerPeopleOut.bIsRunning) {
-			startAnew();
-	}
-	if ((web.state==2)&&(imageSaved==false)&&(web.triangleDrawn>=web.triangulation.getNumTriangles()/2)) {
-		kinect.saveImage(counterUser.getInt());
-		counterUser.increment();
-		imageSaved=true;
-	}
-	currentTime = ofGetElapsedTimef();
+	// if (!base.isAllocated()) {
+	// 	base = kinect.base;
+	// 	web.base = base;
+	// }
+	// else{
+	// 	web.update();
+	// }
+	// sound.update();
+	// kinect.update();
+	// timerDetectionStill.update();
+	// timerPeopleOut.update();
+	// stateManager();
+	// if (restart&&!timerPeopleOut.bIsRunning) {
+	// 		startAnew();
+	// }
+	// if ((web.state==2)&&(imageSaved==false)&&(web.triangleDrawn>=web.triangulation.getNumTriangles()/2)) {
+	// 	kinect.saveImage(counterUser.getInt());
+	// 	counterUser.increment();
+	// 	imageSaved=true;
+	// }
+	// currentTime = ofGetElapsedTimef();
 }
 
 //--------------------------------------------------------------
@@ -77,7 +77,9 @@ void ofApp::draw(){
 
 	//timerDetectionStill.draw( 15 , 15 ) ;
 	//timerPeopleOut.draw(ofGetWidth() /2 + 15 , 15);
-	text.draw(web.waitPeopleToGo,web.end,web.state);
+
+	//text.draw(web.waitPeopleToGo,web.end,web.state);
+	text.draw(true,web.end,web.state);
 }
 
 //Stop all te thread before quitting
