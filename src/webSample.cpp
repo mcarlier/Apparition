@@ -1,7 +1,7 @@
 #include "webSample.h"
 int webSample::NumWebSample = 0;
-float webSample::speedApparition = 2.5;
-float webSample::speedEnd = 6;
+float webSample::speedApparition = 7;
+float webSample::speedEnd = 15;//6
 int webSample::speedFadeIn = 7000; //vitesse apparition
 int webSample::speedFadeOut = 5000;//vitesse disparition (fin)
 

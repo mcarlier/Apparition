@@ -26,6 +26,7 @@ void web::setup(string lastuserID){
   gui.add(c.setup("c", 0.5, 0, 1));
   gui.add(d.setup("d", 0.8, 0, 1));
 
+  multipleFade.setup(stoi(lastuserID)+1,triangulation.triangleMesh);
 
 }
 //Set up the end = when the mesh is complete
@@ -99,18 +100,31 @@ void web::updateEnd(){
       }
 
     }
-    if (count>webSamples.size()&&count==total){
-      std::cout << "please go" << '\n';
+    if (count>webSamples.size()&&count==total&&!multipleFade.started){
+      std::cout << "begin fade multiple" << '\n';
+      multipleFade.start();
+      changeState(1);
+    }
+    if(multipleFade.started&&!multipleFade.isRunning){
+      std::cout << "Please go" << '\n';
       end=false;
       waitPeopleToGo=true;
-      changeState(1);
+      multipleFade.started=false;
+    }
+    if(multipleFade.started){
+      multipleFade.update();
     }
 }
 
 //main Draw function
 void web::draw(ofShader shader,ofShader shaderweb,float soundeffect,float currentTime){
     ofSetColor(ofColor(255,255,255,100));
-    draw_web(shaderweb,currentTime);
+    if(!multipleFade.needToSeeBg){
+      draw_web(shaderweb,currentTime);
+    }
+    if(multipleFade.started){
+      multipleFade.draw(Desappeare,currentTime);
+    }
     drawSusus(shader,soundeffect,currentTime);
 }
 //Draw the Susu =  white balls
@@ -128,14 +142,11 @@ void web::drawSusus(ofShader shader,float soundeffect,float currentTime){
 //Draw the web = mesh
 void web::draw_web(ofShader shader,float currentTime){
     ofShader sh;
-    ofShader sh2;
     if(meshDesappear){
         sh = Desappeare;
-        sh2 = Desappeare;
     }
     else{
       sh = shader;
-      sh2 = shaderEnd;
     }
     ofPushMatrix();
     ofTranslate(-RVB.getWidth()/4,RVB.getHeight()*0.75/2,0);
@@ -231,7 +242,7 @@ void web::changeState(int newState){
   for (size_t i = 0; i < webSamples.size(); i++) {
     webSamples[i].changeState(newState);
   }
-  if((state==2)&&!waitPeopleToGo){
+  if((state==2)&&!waitPeopleToGo&&!multipleFade.started){
     std::cout << "disappear meash" << '\n';
       meshDesappear = true;
       timerMeshDesappeare.start(false);
@@ -304,6 +315,7 @@ void web::startAnew(ofImage newImg){
       end = false;
       waitPeopleToGo = false;
       setupWaitPeopleToGo = false;
+      multipleFade.startAnew(newImg);
   }
 }
 

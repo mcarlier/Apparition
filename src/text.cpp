@@ -32,7 +32,7 @@ void text::update(string count){
   numberOfUser = stoi(user);
 
 }
-void text::draw(Boolean waitToGo, Boolean end, int statSusu){
+void text::draw(Boolean waitToGo, Boolean multipleFadeStarted, Boolean end, int statSusu){
   ofSetColor(ofColor(255,255,255,255));
   if(waitToGo){
   myfont.drawString("Thank you for your participation", 380,385);
@@ -52,7 +52,7 @@ void text::draw(Boolean waitToGo, Boolean end, int statSusu){
     userJPN.draw(595,490);
     bonTravailJPN.draw(535,535);
   }
-  else if(statSusu==1){
+  else if(statSusu==1&&!multipleFadeStarted){
     myfont.drawString("Please sit and stay still", 490,455);
     pleasesitJPN.draw(340, 450);
  }

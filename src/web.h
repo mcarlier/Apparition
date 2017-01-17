@@ -4,6 +4,7 @@
 #include "ofxDelaunay.h"
 #include "ofxGui.h"
 #include "ofxSimpleTimer.h"
+#include "multipleFade.h"
 
 
 class web {
@@ -27,6 +28,7 @@ class web {
 		void makeMeshDesappeare();
 		void startAnew(ofImage newImg);
 
+
 		int NumWebSample;
 		vector<webSample> webSamples;
 		vector<ofMeshFace> triangles;
@@ -34,7 +36,9 @@ class web {
 		ofxDelaunay triangulation;
 		int triangleDrawn;
 
-		ofxSimpleTimer timerMeshDesappeare ;
+		multipleFade multipleFade;
+		ofxSimpleTimer timerMeshDesappeare;
+
 
 		Boolean waitPeopleToGo;
 		Boolean setupWaitPeopleToGo;
