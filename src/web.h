@@ -5,11 +5,13 @@
 #include "ofxGui.h"
 #include "ofxSimpleTimer.h"
 #include "multipleFade.h"
+#include "ofxJSON.h"
+
 
 
 class web {
 	public:
-		void setup(string lastuserID);
+		void setup(Json::Value jsoninfos,string lastuserID);
 		void setupEnd();
 
 		void update();

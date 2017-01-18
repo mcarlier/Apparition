@@ -14,7 +14,7 @@ class kinect {
 	public:
 		ofxKinectV2 kinect;
 
-		void setup();
+		void setup(int precisionP,int precisionM);
 		Boolean initialisationSucces;
 
 		void update();

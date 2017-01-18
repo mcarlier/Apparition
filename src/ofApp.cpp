@@ -3,18 +3,20 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	//ofSetVerticalSync(true);
-	kinect.setup();
+	ofxJSONElement infos;
+	infos.open("values.json");
+	kinect.setup(stoi(infos["kinect"]["PresencePrecision"].asString()),stoi(infos["kinect"]["MotionPrecision"].asString()));
 	shader.load("shaders/glitch");
 	shaderweb.load("shaders/glitch_web");
 	sound.setup();
-	timerDetectionStill.setup(5000); //How much time the person stay still before draw
-	timerPeopleOut.setup(10000);//How much time noone before restart
+	timerDetectionStill.setup(stoi(infos["App"]["timerDetectionStill"].asString())); //How much time the person stay still before draw
+	timerPeopleOut.setup(stoi(infos["App"]["timerPeopleOut"].asString()));//How much time noone before restart
 	imageSaved = false;
 	restart = false;
 	counterUser.setup();
 	text.setup(counterUser.getString());
 	int lastuserID = (counterUser.getInt()-1)%5;
-	web.setup(to_string(lastuserID));
+	web.setup(infos["web"],to_string(lastuserID));
 
 	std::cout << counterUser.getString() << '\n';
 

@@ -12,5 +12,5 @@ class jsonManager {
 		void increment();
     int getInt();
     string getString();
-    
+
 };

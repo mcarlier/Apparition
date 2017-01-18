@@ -1,6 +1,8 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxSimpleTimer.h"
+#include "ofxJSON.h"
+
 
 
 
@@ -9,7 +11,7 @@
 class multipleFade {
 	public:
 		static int numberOfImages;
-		void setup(int curentUserID,ofMesh triangulatedMesh);
+		void setup(int curentUserID,ofMesh triangulatedMesh,Json::Value jsoninfos);
 		void update();
 		static void updateTimer(ofxSimpleTimer timer);
 		void updateStatus(int id);
@@ -20,6 +22,8 @@ class multipleFade {
 		void startAnew(ofImage newImage);
 
 		ofxSimpleTimer pauseBeforeBegin;
+		int durationFade;
+		int durationStay;
     vector<ofImage> images;
 		vector<int> status; //0 not started, 1 fadeIn, 2 Pause, 3 fadeOut, 4 finished
     vector<ofxSimpleTimer> timers;
@@ -28,5 +32,6 @@ class multipleFade {
     Boolean isRunning;
 		Boolean needToSeeBg;
     Boolean started;
+		Boolean restarted;
 		int indice;
 };

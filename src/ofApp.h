@@ -8,6 +8,8 @@
 #include "ofxSimpleTimer.h"
 #include "jsonManager.h"
 #include "ofxGui.h"
+#include "ofxJSON.h"
+
 
 
 class ofApp : public ofBaseApp{

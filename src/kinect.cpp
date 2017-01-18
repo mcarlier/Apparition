@@ -1,7 +1,7 @@
 #include "kinect.h"
 
 //Setup the kinect and wait for the first frame
-void kinect::setup(){
+void kinect::setup(int precisionP,int precisionM){
     //Uncomment for verbose info from libfreenect2
     //ofSetLogLevel(OF_LOG_VERBOSE);
     initialisationSucces = false;
@@ -13,6 +13,8 @@ void kinect::setup(){
       while (kinect.isFrameNew() ==false) {
         kinect.update();
       }
+      threadDetection.MotionDetectionPrecision=precisionM;
+      threadDetection.PresenceDetectionPrecision=precisionP;
       threadDetection.setup(kinect.getDepthPixels());
       threadDetection.startThread();
     }

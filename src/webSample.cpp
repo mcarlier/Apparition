@@ -1,9 +1,9 @@
 #include "webSample.h"
 int webSample::NumWebSample = 0;
-float webSample::speedApparition = 7;
-float webSample::speedEnd = 15;//6
-int webSample::speedFadeIn = 7000; //vitesse apparition
-int webSample::speedFadeOut = 5000;//vitesse disparition (fin)
+float webSample::speedApparition;
+float webSample::speedEnd;//6
+int webSample::speedFadeIn; //vitesse apparition
+int webSample::speedFadeOut;//vitesse disparition (fin)
 
 
 
@@ -12,7 +12,6 @@ void webSample::setup(){
   NumWebSample++;
   index = NumWebSample;
   position = ofVec3f(0);
-
   speed = speedApparition;
   size =(rand()%3)+2;
   susuImg.load("dot.png");

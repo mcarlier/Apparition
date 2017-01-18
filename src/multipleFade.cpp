@@ -1,7 +1,9 @@
 #include "multipleFade.h"
-int multipleFade::numberOfImages = 5;
+int multipleFade::numberOfImages;
 
-void multipleFade::setup(int curentUserID, ofMesh triangulatedMesh){
+void multipleFade::setup(int curentUserID, ofMesh triangulatedMesh,Json::Value jsoninfos){
+  durationFade =stoi(jsoninfos["timerFade"].asString());
+  durationStay=stoi(jsoninfos["timerStay"].asString());
   if(curentUserID>=numberOfImages){
     curentUserID%=numberOfImages;
   }
@@ -13,12 +15,12 @@ void multipleFade::setup(int curentUserID, ofMesh triangulatedMesh){
     images.push_back(img);
     status.push_back(0);
     ofxSimpleTimer timer;
-    timer.setup(5000);
+    timer.setup(durationFade);
     timers.push_back(timer);
     curentUserID = (curentUserID+1)%numberOfImages;
     needToSeeBg = false;
   }
-  pauseBeforeBegin.setup(5000);
+  pauseBeforeBegin.setup(stoi(jsoninfos["pauseBeforeBegin"].asString()));
   isRunning = false;
   started = false;
   mesh = triangulatedMesh;
@@ -27,6 +29,7 @@ void multipleFade::start(){
   isRunning = true;
   started = true;
   pauseBeforeBegin.start(false);
+  restarted = true;
 }
 
 void multipleFade::update(){
@@ -43,24 +46,25 @@ void multipleFade::updateTimer(ofxSimpleTimer timer){
   timer.update();
 }
 void multipleFade::updateStatus(int id){
+  //std::cout << "id = "<<id<<" time = "<<timers[id].getNormalizedProgress() << '\n';
   if(status[id]==1&&(timers[id].getNormalizedProgress()>=0.98||timers[id].getNormalizedProgress()<0)){
     status[id]=2;
     timers[id].stop();
-    timers[id].setup(1000);
+    timers[id].setup(durationStay);
     timers[id].start(false);
     startNext();
-    // std::cout << "2/ id = "<<id << '\n';
+     //std::cout << "2/ id = "<<id << '\n';
   }
   else if(status[id]==2&&(timers[id].getNormalizedProgress()>=0.98||timers[id].getNormalizedProgress()<0)){
     status[id]=3;
     timers[id].stop();
-    timers[id].setup(5000);
+    timers[id].setup(durationFade);
     timers[id].start(false);
-    // std::cout << "3/ id = "<<id << '\n';
+     //std::cout << "3/ id = "<<id << '\n';
   }
   else if(status[id]==3&&(timers[id].getNormalizedProgress()>=0.98||timers[id].getNormalizedProgress()<0)){
     status[id]=4;
-    // std::cout << "4/ id = "<<id << '\n';
+     //std::cout << "4/ id = "<<id << '\n';
     checkEnd();
   }
 
@@ -111,23 +115,28 @@ void multipleFade::checkEnd(){
   else if (isItOver==numberOfImages){
     std::cout << "end multipleFade" << '\n';
     isRunning=false;
+    restarted=false;
   }
 }
 void multipleFade::startAnew(ofImage newImage){
- indice = 0;
- images.insert (images.begin(), newImage);
- images.erase (images.begin()+images.size()-1);
- for (size_t i = 0; i < status.size(); i++) {
-   status[i]=0;
- }
-
+  if(restarted==false){
+    indice = 0;
+    images.push_back(newImage);
+    images.erase(images.begin());
+    needToSeeBg=false;
+    for (size_t i = 0; i < status.size(); i++) {
+      status[i]=0;
+      timers[i].stop();
+    }
+    restarted=true;
+  }
 }
 void multipleFade::startNext(){
   if(indice<numberOfImages){
     if(status[indice]==0){
       status[indice]=1;
       timers[indice].start(false);
-      // std::cout << "start : " <<indice<< '\n';
+      std::cout << "start : " <<indice<< '\n';
     }
     indice ++;
   }

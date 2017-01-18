@@ -1,12 +1,17 @@
 #include "web.h"
 //Main setup function
-void web::setup(string lastuserID){
-  NumWebSample = 10;
+void web::setup(Json::Value jsoninfos,string lastuserID){
+  NumWebSample = stoi(jsoninfos["NumWebSample"].asString());
+  webSample::speedApparition=stof(jsoninfos["webSamples"]["speedApparition"].asString());
+  webSample::speedEnd=stof(jsoninfos["webSamples"]["speedDisparition"].asString());
+  webSample::speedFadeIn=stoi(jsoninfos["webSamples"]["timerappearance"].asString());
+  webSample::speedFadeOut=stoi(jsoninfos["webSamples"]["timerDesapearance"].asString());
   for (size_t i = 0; i < NumWebSample; i++) {
     webSample su;
     su.setup();
     webSamples.push_back(su);
   }
+
   changeState(0);
   shaderEnd.load("shaders/end");
   meshDesappear = false;
@@ -16,7 +21,7 @@ void web::setup(string lastuserID){
   createMesh();
   meshcomplete = false;
 
-  timerMeshDesappeare.setup(4000);//Time mesh desappeare (movement)
+  timerMeshDesappeare.setup(stoi(jsoninfos["timerMeshDesappeare"].asString()));//Time mesh desappeare (movement)
   end = false;
   waitPeopleToGo = false;
   setupWaitPeopleToGo =false;
@@ -26,7 +31,8 @@ void web::setup(string lastuserID){
   gui.add(c.setup("c", 0.5, 0, 1));
   gui.add(d.setup("d", 0.8, 0, 1));
 
-  multipleFade.setup(stoi(lastuserID)+1,triangulation.triangleMesh);
+  multipleFade::numberOfImages=stoi(jsoninfos["multifade"]["numberOfImages"].asString());
+  multipleFade.setup(stoi(lastuserID)+1,triangulation.triangleMesh,jsoninfos["multifade"]);
 
 }
 //Set up the end = when the mesh is complete

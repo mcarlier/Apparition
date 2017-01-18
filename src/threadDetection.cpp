@@ -1,11 +1,12 @@
 #include "threadDetection.h"
+// int threadDetection::MotionDetectionPrecision;
+// int threadDetection::PresenceDetectionPrecision;
 
 void threadDetection::setup(ofPixels img){
     currentDepthImage = img;
     avg0 = getDepthAvgPresence(currentDepthImage);
     SomeoneDetected = 0;
     move = false;
-
 }
 
 void threadDetection::update(ofPixels img){
