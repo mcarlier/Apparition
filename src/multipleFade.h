@@ -11,6 +11,7 @@
 class multipleFade {
 	public:
 		static int numberOfImages;
+		Boolean infTonumberOfImage;
 		void setup(int curentUserID,ofMesh triangulatedMesh,Json::Value jsoninfos);
 		void update();
 		static void updateTimer(ofxSimpleTimer timer);
@@ -34,4 +35,5 @@ class multipleFade {
     Boolean started;
 		Boolean restarted;
 		int indice;
+		int currentId;
 };

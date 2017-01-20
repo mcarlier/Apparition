@@ -4,21 +4,21 @@ int multipleFade::numberOfImages;
 void multipleFade::setup(int curentUserID, ofMesh triangulatedMesh,Json::Value jsoninfos){
   durationFade =stoi(jsoninfos["timerFade"].asString());
   durationStay=stoi(jsoninfos["timerStay"].asString());
-  if(curentUserID>=numberOfImages){
-    curentUserID%=numberOfImages;
-  }
   indice = 0;
+  int i = 0;
+  currentId = curentUserID;
+  if(curentUserID<numberOfImages){infTonumberOfImage=true;}
+  else{infTonumberOfImage=false;}
   while (images.size()<numberOfImages) {
     ofImage img;
-    img.load("img"+to_string(curentUserID)+".jpg");
-    //images.insert (images.begin(), img);
+    img.load("img"+to_string(i)+".jpg");
     images.push_back(img);
     status.push_back(0);
     ofxSimpleTimer timer;
     timer.setup(durationFade);
     timers.push_back(timer);
-    curentUserID = (curentUserID+1)%numberOfImages;
     needToSeeBg = false;
+    i++;
   }
   pauseBeforeBegin.setup(stoi(jsoninfos["pauseBeforeBegin"].asString()));
   isRunning = false;
@@ -26,10 +26,17 @@ void multipleFade::setup(int curentUserID, ofMesh triangulatedMesh,Json::Value j
   mesh = triangulatedMesh;
 }
 void multipleFade::start(){
-  isRunning = true;
+  if(infTonumberOfImage&&currentId>numberOfImages){
+    infTonumberOfImage=false;
+  }
+  if(!infTonumberOfImage){//4 first users = normals
+    isRunning = true;
+    pauseBeforeBegin.start(false);
+    restarted = true;
+  }
   started = true;
-  pauseBeforeBegin.start(false);
-  restarted = true;
+  currentId++;
+
 }
 
 void multipleFade::update(){

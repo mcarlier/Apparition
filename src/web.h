@@ -11,7 +11,7 @@
 
 class web {
 	public:
-		void setup(Json::Value jsoninfos,string lastuserID);
+		void setup(Json::Value jsoninfos,int lastuserID);
 		void setupEnd();
 
 		void update();

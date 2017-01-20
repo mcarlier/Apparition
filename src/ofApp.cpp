@@ -15,8 +15,8 @@ void ofApp::setup(){
 	restart = false;
 	counterUser.setup();
 	text.setup(counterUser.getString());
-	int lastuserID = (counterUser.getInt()-1)%5;
-	web.setup(infos["web"],to_string(lastuserID));
+
+	web.setup(infos["web"],counterUser.getInt());
 
 	std::cout << counterUser.getString() << '\n';
 

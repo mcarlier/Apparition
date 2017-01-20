@@ -15,17 +15,15 @@
     "timerMeshDesappeare":4000,
     "multifade":
     {
-      "numberOfImages":5,
+      "numberOfImages":4,
       "timerFade":5000,
       "timerStay":1000,
       "pauseBeforeBegin":1000
     },
     "webSamples":
     {
-      "speedApparition":6,
-      "_speedApparition":2.5,
-      "speedDisparition":15,
-      "_speedDisparition":7,
+      "speedApparition":3.5,
+      "speedDisparition":7,
       "timerappearance":7000,
       "timerDesapearance":5000
     }

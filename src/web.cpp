@@ -1,6 +1,6 @@
 #include "web.h"
 //Main setup function
-void web::setup(Json::Value jsoninfos,string lastuserID){
+void web::setup(Json::Value jsoninfos,int lastuserID){
   NumWebSample = stoi(jsoninfos["NumWebSample"].asString());
   webSample::speedApparition=stof(jsoninfos["webSamples"]["speedApparition"].asString());
   webSample::speedEnd=stof(jsoninfos["webSamples"]["speedDisparition"].asString());
@@ -16,8 +16,8 @@ void web::setup(Json::Value jsoninfos,string lastuserID){
   shaderEnd.load("shaders/end");
   meshDesappear = false;
   Desappeare.load("shaders/desappeare");
-
-  RVB.load("img"+lastuserID+".jpg");
+  int lastuserIDint = (lastuserID-1)%5;
+  RVB.load("img"+to_string(lastuserIDint)+".jpg");
   createMesh();
   meshcomplete = false;
 
@@ -32,7 +32,7 @@ void web::setup(Json::Value jsoninfos,string lastuserID){
   gui.add(d.setup("d", 0.8, 0, 1));
 
   multipleFade::numberOfImages=stoi(jsoninfos["multifade"]["numberOfImages"].asString());
-  multipleFade.setup(stoi(lastuserID)+1,triangulation.triangleMesh,jsoninfos["multifade"]);
+  multipleFade.setup(lastuserID,triangulation.triangleMesh,jsoninfos["multifade"]);
 
 }
 //Set up the end = when the mesh is complete
@@ -42,7 +42,7 @@ void web::setupEnd(){
   triangleDrawn=triangulation.getNumTriangles()-1;
   for (size_t i = 0; i < webSamples.size(); i++) {
     webSamples[i].end=true;
-    webSamples[i].speed=webSamples[i].speedEnd;
+    webSamples[i].speed=ofRandom(webSamples[i].speedEnd-2,webSamples[i].speedEnd);
     webSamples[i].changeState(2);
   }
 }
@@ -266,7 +266,7 @@ void web::createMesh(){
           a=0;
           b=0;
 
-           if(i<=524/2){a = -ofRandom(0,5);}
+           if((i<=524/2)&&(i!=150)){a = -ofRandom(0,5);}
           else{a =  ofRandom(0,5);}
 
            if(j<=(424-50)/2){b = -ofRandom(0,5);}
@@ -313,7 +313,7 @@ void web::startAnew(ofImage newImg){
       webSamples[i].clear();
       changeState(0);
       webSamples[i].meshEnd.clear();
-      webSamples[i].speed = webSamples[i].speedApparition;;
+      webSamples[i].speed = ofRandom(webSamples[i].speedApparition-2,webSamples[i].speedApparition);
       webSamples[i].end = false;
       meshDesappear = false;
       RVB = newImg;
