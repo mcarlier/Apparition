@@ -15,8 +15,8 @@ void ofApp::setup(){
 	restart = false;
 	counterUser.setup();
 	text.setup(counterUser.getString());
-
 	web.setup(infos["web"],counterUser.getInt());
+
 
 	std::cout << counterUser.getString() << '\n';
 
@@ -38,6 +38,7 @@ void ofApp::update(){
 	else{
 		web.update();
 	}
+
 	sound.update();
 	kinect.update();
 	timerDetectionStill.update();
@@ -70,7 +71,7 @@ void ofApp::draw(){
 	}
 	shader.end();
 	ofPopMatrix();
-	if((!web.end)||(web.multipleFade.started==true)){
+	if(((!web.end)||(web.multipleFade.started==true))&&(!web.waitPeopleToGo||!web.multipleFade.infTonumberOfImage)){
 		kinect.draw(shader,currentTime);
 	}
 	web.draw(shader,shaderweb,sound.avg,currentTime);
@@ -176,7 +177,8 @@ void ofApp::mousePressed(int x, int y, int button){
 	 std::cout << "y = "<<  y<< '\n';
 	 	//std::cout << "saveImage " << '\n';
 		//kinect.saveImage();
-	 	web.setupEnd();
+	 	//web.setupEnd();
+
 	 	//startAnew();
 }
 //--------------------------------------------------------------

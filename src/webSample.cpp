@@ -33,7 +33,7 @@ void webSample::update(){
 
 //draw the susu texture around the webSample position.
 void  webSample::drawSusu(ofShader shader,float soundeffect,float currentTime){
-  float a = 10*size + (soundeffect*1000)*5;
+  float a = 10*size + (soundeffect*2000)*5;
   shader.begin();
   susuImg.draw(position.x-(a/2),position.y-(a/2),a,a);
   shader.end();

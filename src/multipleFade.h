@@ -36,4 +36,5 @@ class multipleFade {
 		Boolean restarted;
 		int indice;
 		int currentId;
+		ofShader shaderF;
 };

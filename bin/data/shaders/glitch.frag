@@ -83,9 +83,9 @@ vec4 convergence() {
   vec4 col_g = texture(tex0,texCoordVarying+deformationG+ vec2( -70.5*random(vec2(a)),0));
 
 
-  col.b = col.b + col_r.b*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
-  col.r = col.r + col_l.r*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
-  col.g = col.g + col_g.g*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.b = col.b + col_r.b*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.r = col.r + col_l.r*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.g = col.g + col_g.g*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
 
   return col;
 }

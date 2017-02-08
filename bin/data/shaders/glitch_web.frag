@@ -89,9 +89,9 @@ vec4 convergence(){
   vec4 col_g = texture(tex0,texCoordVarying+deformationG+ vec2( -70.5*random(vec2(a)),0));
 
 
-  col.b = col.b + col_r.b*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
-  col.r = col.r + col_l.r*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
-  col.g = col.g + col_g.g*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.b = col.b + col_r.b*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.r = col.r + col_l.r*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.g = col.g + col_g.g*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
 
   return col;
 }
@@ -101,7 +101,7 @@ vec4 convergence(){
 void main() {
 
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
-    float y =smoothstep(0.325,0.39,st.x) - smoothstep(0.73,0.785,st.x);
+    float y =smoothstep(0.325,0.5,st.x) - smoothstep(0.6,0.785,st.x);
     vec4 col = convergence();
     col.a *= y;
 	  outputColor = col;

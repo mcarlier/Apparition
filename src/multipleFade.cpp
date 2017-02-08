@@ -5,8 +5,10 @@ void multipleFade::setup(int curentUserID, ofMesh triangulatedMesh,Json::Value j
   durationFade =stoi(jsoninfos["timerFade"].asString());
   durationStay=stoi(jsoninfos["timerStay"].asString());
   indice = 0;
-  int i = 0;
+
+  shaderF.load("shaders/fadeMultiple");
   currentId = curentUserID;
+  int i = currentId%numberOfImages;
   if(curentUserID<numberOfImages){infTonumberOfImage=true;}
   else{infTonumberOfImage=false;}
   while (images.size()<numberOfImages) {
@@ -19,6 +21,7 @@ void multipleFade::setup(int curentUserID, ofMesh triangulatedMesh,Json::Value j
     timers.push_back(timer);
     needToSeeBg = false;
     i++;
+    i%=numberOfImages;
   }
   pauseBeforeBegin.setup(stoi(jsoninfos["pauseBeforeBegin"].asString()));
   isRunning = false;
@@ -26,7 +29,8 @@ void multipleFade::setup(int curentUserID, ofMesh triangulatedMesh,Json::Value j
   mesh = triangulatedMesh;
 }
 void multipleFade::start(){
-  if(infTonumberOfImage&&currentId>numberOfImages){
+  std::cout << currentId <<" >= "<< numberOfImages<< '\n';
+  if(infTonumberOfImage&&(currentId>=numberOfImages)){
     infTonumberOfImage=false;
   }
   if(!infTonumberOfImage){//4 first users = normals
@@ -77,32 +81,36 @@ void multipleFade::updateStatus(int id){
 
 }
 void multipleFade::draw(ofShader shader,float currentTime){
+  // ofPushMatrix();
+  // ofTranslate(-images[0].getWidth()/4,images[0].getHeight()*0.75/2,0);
+  // ofScale(ofVec3f(0.8));
+  // ofScale(ofVec3f(images[0].getHeight()/424));
+  // ofRotate(180,1,0,0);
   ofPushMatrix();
-  ofTranslate(-images[0].getWidth()/4,images[0].getHeight()*0.75/2,0);
-  ofScale(ofVec3f(0.8));
-  ofScale(ofVec3f(images[0].getHeight()/424));
-  ofRotate(180,1,0,0);
+  ofScale(ofVec3f(0.65));
+  ofTranslate(-images[0].getWidth()/2,-images[0].getHeight()/2,0);
   ofSetColor(ofColor::white);
   for (size_t i = 0; i < status.size(); i++) {
     if(status[i]!=0&&status[i]!=4)
       {
-      shader.begin();
-      shader.setUniform1f("u_time", currentTime);
-      shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+      shaderF.begin();
+      shaderF.setUniform1f("u_time", currentTime);
+      shaderF.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
       if(status[i]==1){
-        shader.setUniform1f("timer", 1-timers[i].getNormalizedProgress());
+        shaderF.setUniform1f("timer", 1-timers[i].getNormalizedProgress());
       }
       else if(status[i]==2){
-        shader.setUniform1f("timer", 0);
+        shaderF.setUniform1f("timer", 0);
       }
       else if(status[i]==3){
-        shader.setUniform1f("timer", timers[i].getNormalizedProgress());
+        shaderF.setUniform1f("timer", timers[i].getNormalizedProgress());
       }
-     images[i].bind();
-
-      mesh.draw();
-      images[i].unbind();
-      shader.end();
+     images[i].draw(0,0);
+    //  bind();
+     //
+    //   mesh.draw();
+    //   images[i].unbind();
+      shaderF.end();
     }
   }
 

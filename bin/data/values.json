@@ -2,12 +2,13 @@
   "App":
   {
     "timerDetectionStill":5000,
-    "timerPeopleOut":10000
+    "timerPeopleOut":5000,
+    "_timerPeopleOut":10000
   },
   "kinect":
   {
     "PresencePrecision":200,
-    "MotionPrecision":770
+    "MotionPrecision":700
   },
   "web":
   {
@@ -18,12 +19,14 @@
       "numberOfImages":4,
       "timerFade":5000,
       "timerStay":1000,
-      "pauseBeforeBegin":1000
+      "pauseBeforeBegin":5000
     },
     "webSamples":
     {
       "speedApparition":3.5,
+      "_speedApparition":3.5,
       "speedDisparition":7,
+      "_speedDisparition":7,
       "timerappearance":7000,
       "timerDesapearance":5000
     }

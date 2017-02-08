@@ -4,6 +4,7 @@
 uniform sampler2DRect tex0;
 uniform vec2 u_resolution;
 uniform float u_time;
+uniform float status;//1 = smoothstep needed//21 = smoothstep not needed
 uniform float timer;
 in vec2 texCoordVarying;
 out vec4 outputColor;
@@ -66,25 +67,28 @@ vec4 convergence() {
   vec4 col_g = texture(tex0,texCoordVarying+deformationG+ vec2( -70.5*random(vec2(a)),0));
 
 
-  col.b = col.b + col_r.b*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
-  col.r = col.r + col_l.r*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
-  col.g = col.g + col_g.g*max(0.5,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.b = col.b + col_r.b*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.r = col.r + col_l.r*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
+  col.g = col.g + col_g.g*max(0.3,sin(st.y*2)*0.5)*random(vec2(sin(int(u_time/2))));
 
   return col;
 }
 
 void main() {
   vec2 st = gl_FragCoord.xy/u_resolution.xy;
-  float y =smoothstep(0.325,0.39,st.x) - smoothstep(0.73,0.785,st.x);
+  float y =smoothstep(0.35,0.455,st.x) - smoothstep(0.62,0.775,st.x);
   vec4 col;
   if((timer<0.98)&&(timer>0)){
     col = convergence()*vec4(1,1,1,timer);
   }
   else{
     col=convergence();
+
   }
-  col.a *= y;
-  outputColor = col;
+  if(status==1){
+    col.a *= y;
+  }
+  outputColor=col;
 
     // vec2 st = gl_FragCoord.xy/u_resolution.xy*3.;
     // if((timer<0.98)&&(timer>0)){

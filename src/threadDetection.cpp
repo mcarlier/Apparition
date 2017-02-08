@@ -11,10 +11,9 @@ void threadDetection::setup(ofPixels img){
 
 void threadDetection::update(ofPixels img){
       move = false;
-      if (SomeoneDetected!=0){
-        detectMotion(img);
-      }
+
       detectPresence(img);
+
       lastDepthImage = img;
 };
 
@@ -34,12 +33,13 @@ void threadDetection::detectPresence(ofPixels img){
 //Detect if something moved since the last frame
 void threadDetection::detectMotion(ofPixels imgDepth){
   int diffDepth = 0;
-  for(int i = 0; i < imgDepth.size(); i+=100) {
+  int i;
+  for(i = 0; i < imgDepth.size(); i+=100) {
     if(imgDepth.getColor(i).r!=lastDepthImage.getColor(i).r){
       diffDepth++;
     }
   }
-  std::cout <<diffDepth << '\n';
+  std::cout <<diffDepth<<" "<<i << '\n';
   if(diffDepth>MotionDetectionPrecision){
     move = true;
   }
@@ -51,10 +51,21 @@ int threadDetection::getDetectionStatus(){
 
 int threadDetection::getDepthAvgPresence(ofPixels pix){
   int avg = 0;
+  int diffDepth = 0;
+
   for(int i = 0; i < pix.size(); i+=100) {
     if ((int)pix.getColor(i).r<PresenceDetectionPrecision) {
       avg ++;
     }
+   if (SomeoneDetected!=0){
+      if(pix.getColor(i).r!=lastDepthImage.getColor(i).r){
+        diffDepth++;
+      }
+    }
+  }
+  if(diffDepth!=0)std::cout <<diffDepth<< '\n';
+  if(diffDepth>MotionDetectionPrecision){
+    move = true;
   }
   return avg;
 }

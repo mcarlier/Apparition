@@ -16,7 +16,8 @@ void web::setup(Json::Value jsoninfos,int lastuserID){
   shaderEnd.load("shaders/end");
   meshDesappear = false;
   Desappeare.load("shaders/desappeare");
-  int lastuserIDint = (lastuserID-1)%5;
+  int lastuserIDint = (lastuserID-1)%4;//UPDATEa
+  if(lastuserIDint<0)lastuserIDint = 0;
   RVB.load("img"+to_string(lastuserIDint)+".jpg");
   createMesh();
   meshcomplete = false;
@@ -26,11 +27,10 @@ void web::setup(Json::Value jsoninfos,int lastuserID){
   waitPeopleToGo = false;
   setupWaitPeopleToGo =false;
   gui.setup(); //Update : no need
-  gui.add(a.setup("a", 0.2, 0, 1));
-  gui.add(b.setup("b", 0.5, 0, 1));
-  gui.add(c.setup("c", 0.5, 0, 1));
-  gui.add(d.setup("d", 0.8, 0, 1));
-
+  gui.add(a.setup("a", 0.325, 0, 1));
+  gui.add(b.setup("b", 0.39, 0, 1));
+  gui.add(c.setup("c", 0.73, 0, 1));
+  gui.add(d.setup("d", 0.785, 0, 1));
   multipleFade::numberOfImages=stoi(jsoninfos["multifade"]["numberOfImages"].asString());
   multipleFade.setup(lastuserID,triangulation.triangleMesh,jsoninfos["multifade"]);
 
@@ -130,6 +130,7 @@ void web::draw(ofShader shader,ofShader shaderweb,float soundeffect,float curren
     }
     if(multipleFade.started){
       multipleFade.draw(Desappeare,currentTime);
+
     }
     drawSusus(shader,soundeffect,currentTime);
 }
@@ -168,6 +169,8 @@ void web::draw_web(ofShader shader,float currentTime){
     sh.setUniform1f("b", b);
     sh.setUniform1f("c", c);
     sh.setUniform1f("d", d);
+    //triangles.triangleMesh.drawWireframe();
+
     RVB.bind();
     if(!waitPeopleToGo) {
         for (size_t i = 0; i < webSamples.size(); i++) {
@@ -177,16 +180,16 @@ void web::draw_web(ofShader shader,float currentTime){
          sh.end();
     }
     draw_fadetriangles(currentTime);
-    if (end) {
-      sh.begin();
-      base.bind();
-      for (size_t i = 0; i < webSamples.size(); i++) {
-        webSamples[i].meshEnd.draw();
-      }
-      base.unbind();
-      sh.end();
-
-    }
+    // if (end) {
+    //   sh.begin();
+    //   base.bind();
+    //   // for (size_t i = 0; i < webSamples.size(); i++) {
+    //   //   webSamples[i].meshEnd.draw();
+    //   // }
+    //   base.unbind();
+    //   sh.end();
+    //
+    // }
 
     ofPopMatrix();
 
@@ -204,6 +207,7 @@ void web::draw_fadetriangles(float currentTime){
    RVB.bind();
    sh2.setUniform1f("u_time", currentTime);
    sh2.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+   sh2.setUniform1f("status",1);
    for (size_t i = 0; i < webSamples.size(); i++) {
      for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
        if(!meshDesappear){
@@ -230,6 +234,9 @@ void web::draw_fadetriangles(float currentTime){
      shaderEnd.setUniform1f("u_time", currentTime);
      shaderEnd.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
      for (size_t i = 0; i < webSamples.size(); i++) {
+       shaderEnd.setUniform1f("timer",1);
+       shaderEnd.setUniform1f("status",1);
+       webSamples[i].meshEnd.draw();
        for (size_t j = 0; j < webSamples[i].faces.size(); j++) {
          shaderEnd.setUniform1f("timer", webSamples[i].faces[j].timerappearance.getNormalizedProgress());
          if((webSamples[i].faces[j].canDraw)&&(webSamples[i].faces[j].type==2)){
